@@ -1,0 +1,78 @@
+<fieldset class="params-fieldset">
+  <legend>Dynamic Parameters</legend>
+
+  @if (paramsArray().controls.length > 0) {
+    <div class="params-list" role="list">
+      @for (control of paramsArray().controls; track $index) {
+        <div
+          [formGroup]="getParamGroup($index)"
+          class="param-group"
+          role="listitem">
+
+          <div class="param-input-group">
+            <div class="input-wrapper">
+              <label [for]="'param-key-' + $index" class="visually-hidden">
+                Parameter key {{ $index + 1 }}
+              </label>
+              <input
+                [id]="'param-key-' + $index"
+                type="text"
+                formControlName="key"
+                placeholder="key"
+                class="param-input"
+                [attr.aria-invalid]="hasError(getParamGroup($index), 'key')"
+                [attr.aria-describedby]="hasError(getParamGroup($index), 'key') ? 'key-error-' + $index : null">
+              @if (hasError(getParamGroup($index), 'key')) {
+                <small [id]="'key-error-' + $index" class="error" role="alert">
+                  {{ getErrorMessage(getParamGroup($index), 'key') }}
+                </small>
+              }
+            </div>
+
+            <div class="input-wrapper">
+              <label [for]="'param-value-' + $index" class="visually-hidden">
+                Parameter value {{ $index + 1 }}
+              </label>
+              <input
+                [id]="'param-value-' + $index"
+                type="text"
+                formControlName="value"
+                placeholder="value"
+                class="param-input"
+                [attr.aria-invalid]="hasError(getParamGroup($index), 'value')"
+                [attr.aria-describedby]="hasError(getParamGroup($index), 'value') ? 'value-error-' + $index : null">
+              @if (hasError(getParamGroup($index), 'value')) {
+                <small [id]="'value-error-' + $index" class="error" role="alert">
+                  {{ getErrorMessage(getParamGroup($index), 'value') }}
+                </small>
+              }
+            </div>
+          </div>
+
+          <button
+            type="button"
+            (click)="handleRemove($index)"
+            class="remove-btn"
+            [attr.aria-label]="'Remove parameter ' + ($index + 1)"
+            title="Remove parameter">
+            &times;
+          </button>
+        </div>
+      }
+    </div>
+  }
+
+  <button
+    type="button"
+    (click)="handleAdd()"
+    class="add-btn"
+    aria-label="Add new parameter">
+    + Add Parameter
+  </button>
+
+  @if (paramsArray().errors?.['duplicateKeys']; as error) {
+    <div class="form-error" role="alert">
+      <strong>Duplicate keys found:</strong> {{ error.duplicates.join(', ') }}
+    </div>
+  }
+</fieldset>

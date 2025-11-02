@@ -1,0 +1,58 @@
+<div class="history-container" role="region" aria-label="Recent Builds History">
+  <h2>Recent Builds</h2>
+
+  <div class="filter-section">
+    <label for="history-filter" class="visually-hidden">Filter builds</label>
+    <input
+      id="history-filter"
+      type="text"
+      placeholder="Filter by URL, parameters..."
+      (input)="onFilterChange($event)"
+      class="filter-input"
+      aria-label="Filter history"
+      aria-controls="history-list">
+  </div>
+
+  @if (filteredBuilds().length > 0) {
+    <ul id="history-list" class="history-list" role="list">
+      @for (build of filteredBuilds(); track build.id) {
+        <li
+          class="history-item"
+          role="listitem"
+          tabindex="0"
+          (click)="onBuildClick(build)"
+          (keydown.enter)="onBuildClick(build)"
+          (keydown.space)="onBuildClick(build); $event.preventDefault()"
+          [attr.aria-label]="'Load build: ' + build.finalUrl">
+
+          <div class="history-content">
+            <span class="url" title="{{ build.finalUrl }}">
+              {{ build.finalUrl }}
+            </span>
+            <span class="date">
+              {{ build.createdAt | date:'short' }}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="delete-btn"
+            (click)="onDeleteBuild($event, build)"
+            [attr.aria-label]="'Delete build from ' + (build.createdAt | date:'short')"
+            title="Delete this build">
+            &times;
+          </button>
+        </li>
+      }
+    </ul>
+  } @else if (filterTerm()) {
+    <div class="empty-state" role="status">
+      <p>No builds match your search.</p>
+    </div>
+  } @else {
+    <div class="empty-state" role="status">
+      <p>No saved builds yet.</p>
+      <small>Save your first URL build to see it here!</small>
+    </div>
+  }
+</div>

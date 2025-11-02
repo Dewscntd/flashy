@@ -1,0 +1,26 @@
+<div class="toast-container" role="region" aria-label="Notifications" aria-live="polite">
+  @for (notification of notifications(); track notification.id) {
+    <div
+      [class]="'toast ' + getTypeClass(notification.type)"
+      role="alert"
+      [attr.aria-live]="notification.type === 'error' ? 'assertive' : 'polite'">
+
+      <div class="toast-content">
+        <span class="toast-icon" aria-hidden="true">
+          {{ getIcon(notification.type) }}
+        </span>
+        <span class="toast-message">
+          {{ notification.message }}
+        </span>
+      </div>
+
+      <button
+        type="button"
+        (click)="dismiss(notification.id)"
+        class="toast-close"
+        aria-label="Dismiss notification">
+        &times;
+      </button>
+    </div>
+  }
+</div>

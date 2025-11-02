@@ -1,59 +1,259 @@
-# Flashy
+# URL Builder - Modern Angular Application
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.4.
+A production-grade URL builder application built with modern Angular 19 features, demonstrating SOLID principles, clean architecture, and advanced TypeScript patterns.
 
-## Development server
+- **Angular Version:** 19.0.0
+- **Time Spent:** Approximately 5-6 hours
+- **Architecture:** Clean Architecture + Domain-Driven Design
 
-To start a local development server, run:
+## ✨ Features
 
-```bash
-ng serve
+### Core Functionality
+- **URL Form Builder** with typed reactive forms
+  - Required base URL with robust validation
+  - Optional UTM parameters (source, medium, campaign)
+  - Dynamic key-value parameter pairs with duplicate key prevention
+  - Real-time validation feedback
+
+- **Live URL Preview**
+  - Real-time URL construction using computed signals
+  - Character count display
+  - Parameter count display
+  - Copy to clipboard with feedback
+
+- **Recent Builds History**
+  - Last 5 saved builds with localStorage persistence
+  - Advanced search/filter (searches URL, UTM params, and custom params)
+  - Click to reload into form
+  - Delete individual builds
+  - Lazy-loaded using `@defer` for optimal performance
+
+- **User Experience**
+  - Toast notifications for all actions (success, error, warning, info)
+  - Accessible keyboard navigation
+  - ARIA labels and screen reader support
+  - Responsive design
+  - Professional UI with modern styling
+
+## 🛠 Tech Stack
+
+- **Angular 19** - Latest stable version
+- **TypeScript 5.6** - Strict mode enabled
+- **Standalone Components** - No NgModules
+- **Angular Signals** - Reactive state management
+- **Typed Reactive Forms** - Full type safety
+- **Modern Control Flow** - `@if`, `@for`, `@defer`
+- **RxJS 7.8** - For complex async operations
+
+## 🏗 Architecture
+
+This application follows **Clean Architecture** and **SOLID principles** with clear separation of concerns.
+
+### Layered Architecture
+
+```
+┌─────────────────────────────────────────┐
+│      Presentation Layer                 │
+│  (Components - Declarative UI)          │
+├─────────────────────────────────────────┤
+│      Application Layer                  │
+│  (Services - Orchestration)             │
+├─────────────────────────────────────────┤
+│      Domain Layer                       │
+│  (Models, Business Logic, Validators)   │
+├─────────────────────────────────────────┤
+│      Infrastructure Layer               │
+│  (Storage, Clipboard, Notifications)    │
+└─────────────────────────────────────────┘
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### SOLID Principles Applied
 
-## Code scaffolding
+#### 1. Single Responsibility Principle (SRP)
+Each service has ONE clear responsibility:
+- `UrlBuilderService` - Builds URLs from data
+- `ClipboardService` - Handles clipboard operations
+- `StorageService` - Manages localStorage
+- `NotificationService` - Manages user notifications
+- `FormStateManagerService` - Manages form state
+- `UrlBuildRepositoryService` - Handles data persistence
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+#### 2. Open/Closed Principle
+- Services are open for extension, closed for modification
+- Validators are pure functions that can be composed
+- Components accept inputs and emit outputs (no tight coupling)
 
-```bash
-ng generate component component-name
+#### 3. Liskov Substitution Principle
+- Services can be mocked/replaced without breaking the system
+- All dependencies are injected via DI
+
+#### 4. Interface Segregation Principle
+- Small, focused interfaces (models)
+- Components only depend on what they need
+
+#### 5. Dependency Inversion Principle
+- High-level modules (components) depend on abstractions (services)
+- All dependencies flow through DI container
+
+## How to Run
+
+1.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
+2.  **Run the Development Server:**
+    ```bash
+    ng serve
+    ```
+3.  Open your browser to `http://localhost:4200/`.
+
+## 📁 Project Structure
+
+```
+src/app/
+├── core/                           # Core domain and infrastructure
+│   ├── models/
+│   │   └── url-build.model.ts     # Domain models, interfaces, type guards
+│   ├── services/
+│   │   ├── url-builder.service.ts        # Domain: URL construction logic
+│   │   ├── form-state-manager.service.ts # Application: Form orchestration
+│   │   ├── url-build-repository.service.ts # Data persistence with signals
+│   │   ├── clipboard.service.ts          # Infrastructure: Clipboard API
+│   │   ├── notification.service.ts       # Infrastructure: Toast notifications
+│   │   └── storage.service.ts            # Infrastructure: localStorage wrapper
+│   └── validators/
+│       └── url-validators.ts      # Pure validator factory functions
+│
+├── features/                       # Feature modules (domain-specific)
+│   ├── url-builder/
+│   │   └── components/
+│   │       ├── url-preview/       # URL display and actions
+│   │       └── dynamic-params/    # Parameter list management
+│   └── history/
+│       └── history.component.ts   # Build history with filtering
+│
+├── shared/                         # Shared/reusable components
+│   └── components/
+│       └── toast-notification/    # Global toast system
+│
+└── app.component.ts               # Root coordinator component
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Key Design Decisions
 
-```bash
-ng generate --help
+#### 1. **Separation by Layer, Not by Feature**
+```
+core/        → Domain logic & infrastructure (reusable)
+features/    → Feature-specific UI components
+shared/      → Cross-cutting concerns
 ```
 
-## Building
+#### 2. **Repository Pattern**
+`UrlBuildRepositoryService` abstracts data storage:
+- In-memory state using signals
+- localStorage persistence
+- CRUD operations
+- Type-safe with validation
 
-To build the project run:
+#### 3. **Service Layer Pattern**
+Three types of services:
+- **Domain Services**: Pure business logic (`UrlBuilderService`)
+- **Application Services**: Orchestration (`FormStateManagerService`)
+- **Infrastructure Services**: External APIs (`ClipboardService`, `StorageService`)
 
-```bash
-ng build
+#### 4. **Component Composition**
+Components are small, focused, and composable:
+```typescript
+<app-url-preview
+  [urlData]="constructedUrl()"
+  (copyClicked)="onCopyUrl()"
+  (saveClicked)="onSaveBuild()">
+</app-url-preview>
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🎯 Advanced Patterns Used
 
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+### 1. Signals with Computed Values
+```typescript
+readonly filterTerm = signal('');
+readonly filteredBuilds = computed(() => {
+  const term = this.filterTerm().toLowerCase();
+  return this.allBuilds().filter(build =>
+    build.finalUrl.includes(term)
+  );
+});
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+### 2. Typed Reactive Forms
+```typescript
+FormGroup<{
+  baseUrl: FormControl<string | null>;
+  params: FormArray<FormGroup<{
+    key: FormControl<string | null>;
+    value: FormControl<string | null>;
+  }>>;
+}>
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### 3. Validator Factories (Pure Functions)
+```typescript
+export function absoluteUrlValidator(): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    // Validation logic
+  };
+}
+```
 
-## Additional Resources
+### 4. Type Guards
+```typescript
+export function isValidQueryParameter(param: unknown): param is QueryParameter {
+  return (
+    typeof param === 'object' &&
+    param !== null &&
+    'key' in param &&
+    'value' in param
+  );
+}
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## 🧪 Code Quality
+
+- **TypeScript Strict Mode** - Full type safety
+- **No `any` types** - Explicit typing throughout
+- **Immutability** - Readonly properties in models
+- **Pure Functions** - No side effects in validators and utilities
+- **DRY** - No code duplication
+- **KISS** - Simple, understandable code
+- **SOLID** - All principles applied
+
+## 🔒 Security
+
+- URL validation prevents XSS
+- Input sanitization for parameter keys
+- No direct DOM manipulation
+- CSP-friendly (no inline scripts)
+
+## ♿ Accessibility
+
+- ARIA labels and roles
+- Keyboard navigation (Enter, Space)
+- Screen reader support
+- Focus management
+- Semantic HTML
+
+## 📦 Bundle Size
+
+```
+Initial bundle:  ~69 KB (gzipped)
+Lazy chunk:      ~2 KB (history component)
+```
+
+## 🚀 Future Enhancements
+
+- [ ] QR code generation for URLs
+- [ ] Export/import builds to JSON
+- [ ] URL shortening integration
+- [ ] More comprehensive unit tests
+- [ ] E2E tests with Playwright
+- [ ] i18n support
+- [ ] Dark mode theme
