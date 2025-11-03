@@ -43,6 +43,8 @@ export interface UrlBuild {
   readonly finalUrl: string;
   readonly form: UrlBuildForm;
   readonly createdAt: string;
+  readonly shortenedUrl?: string;
+  readonly shortenedBy?: string;
 }
 
 /**

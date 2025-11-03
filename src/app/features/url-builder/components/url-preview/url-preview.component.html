@@ -4,6 +4,14 @@
   @if (urlData(); as data) {
     <div class="preview-box">
       <p class="url-display" role="text" aria-label="Generated URL">{{ data.url }}</p>
+
+      @if (shortenedUrl()) {
+        <div class="shortened-url-section">
+          <strong class="shortened-label">Shortened URL:</strong>
+          <p class="shortened-url-display" role="text" aria-label="Shortened URL">{{ shortenedUrl() }}</p>
+        </div>
+      }
+
       <div class="metadata">
         <span class="char-count" aria-label="Character count">
           Characters: {{ data.characterCount }}
@@ -21,6 +29,19 @@
         class="btn btn-secondary"
         aria-label="Copy URL to clipboard">
         Copy URL
+      </button>
+      <button
+        type="button"
+        (click)="onShorten()"
+        [disabled]="shorteningInProgress()"
+        class="btn btn-secondary"
+        aria-label="Shorten URL">
+        @if (shorteningInProgress()) {
+          <span class="spinner"></span>
+          Shortening...
+        } @else {
+          Shorten URL
+        }
       </button>
       <button
         type="button"

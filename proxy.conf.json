@@ -1,0 +1,20 @@
+{
+  "/api/tinyurl": {
+    "target": "https://tinyurl.com",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/tinyurl": "/api-create.php"
+    },
+    "logLevel": "debug"
+  },
+  "/api/isgd": {
+    "target": "https://is.gd",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api/isgd": "/create.php"
+    },
+    "logLevel": "debug"
+  }
+}

@@ -73,8 +73,11 @@
     <app-url-preview
       [urlData]="constructedUrl()"
       [saveDisabled]="!canSave()"
+      [shorteningInProgress]="shorteningInProgress()"
+      [shortenedUrl]="shortenedUrl()"
       (copyClicked)="onCopyUrl()"
-      (saveClicked)="onSaveBuild()">
+      (saveClicked)="onSaveBuild()"
+      (shortenClicked)="onShortenUrl()">
     </app-url-preview>
   </div>
 

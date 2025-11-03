@@ -85,6 +85,10 @@ describe('UrlPreviewComponent', () => {
     it('should have saveClicked output', () => {
       expect(component.saveClicked).toBeDefined();
     });
+
+    it('should have shortenClicked output', () => {
+      expect(component.shortenClicked).toBeDefined();
+    });
   });
 
   describe('onCopy', () => {
@@ -177,6 +181,87 @@ describe('UrlPreviewComponent', () => {
       fixture.componentRef.setInput('saveDisabled', false);
       component.onSave();
       expect(emitCount).toBe(2);
+    });
+  });
+
+  describe('onShorten', () => {
+    it('should emit shortenClicked when not in progress', (done) => {
+      fixture.componentRef.setInput('shorteningInProgress', false);
+
+      component.shortenClicked.subscribe(() => {
+        expect(true).toBe(true);
+        done();
+      });
+
+      component.onShorten();
+    });
+
+    it('should not emit shortenClicked when in progress', () => {
+      fixture.componentRef.setInput('shorteningInProgress', true);
+      fixture.detectChanges();
+
+      let emitted = false;
+      component.shortenClicked.subscribe(() => {
+        emitted = true;
+      });
+
+      component.onShorten();
+
+      expect(emitted).toBe(false);
+    });
+
+    it('should emit without any value', (done) => {
+      fixture.componentRef.setInput('shorteningInProgress', false);
+
+      component.shortenClicked.subscribe((value) => {
+        expect(value).toBeUndefined();
+        done();
+      });
+
+      component.onShorten();
+    });
+
+    it('should respect shorteningInProgress changes', () => {
+      let emitCount = 0;
+      component.shortenClicked.subscribe(() => {
+        emitCount++;
+      });
+
+      // Initially not in progress
+      fixture.componentRef.setInput('shorteningInProgress', false);
+      component.onShorten();
+      expect(emitCount).toBe(1);
+
+      // Set in progress
+      fixture.componentRef.setInput('shorteningInProgress', true);
+      component.onShorten();
+      expect(emitCount).toBe(1); // Should not increment
+
+      // Reset
+      fixture.componentRef.setInput('shorteningInProgress', false);
+      component.onShorten();
+      expect(emitCount).toBe(2);
+    });
+  });
+
+  describe('shortenedUrl input', () => {
+    it('should have shortenedUrl input defaulting to null', () => {
+      expect(component.shortenedUrl()).toBeNull();
+    });
+
+    it('should accept shortenedUrl input', () => {
+      const shortUrl = 'https://tinyurl.com/abc123';
+      fixture.componentRef.setInput('shortenedUrl', shortUrl);
+      fixture.detectChanges();
+
+      expect(component.shortenedUrl()).toBe(shortUrl);
+    });
+
+    it('should handle null shortenedUrl', () => {
+      fixture.componentRef.setInput('shortenedUrl', null);
+      fixture.detectChanges();
+
+      expect(component.shortenedUrl()).toBeNull();
     });
   });
 
