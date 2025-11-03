@@ -2,8 +2,9 @@
   display: block;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--color-background-primary);
   padding: 2rem;
+  transition: background var(--transition-normal);
 }
 
 .container {
@@ -15,14 +16,30 @@
   align-items: start;
 }
 
-.main-title {
+.header {
   grid-column: 1 / -1;
-  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.main-title {
+  color: var(--color-text-inverse);
   font-size: 2.5rem;
   font-weight: 700;
-  margin: 0 0 2rem 0;
+  margin: 0;
   text-align: center;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 2px 4px var(--color-shadow-sm);
+  transition: color var(--transition-normal);
+}
+
+.theme-toggle-wrapper {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .builder-area {

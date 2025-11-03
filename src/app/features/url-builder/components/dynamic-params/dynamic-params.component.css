@@ -1,14 +1,16 @@
 .params-fieldset {
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--color-surface-border);
   border-radius: 4px;
   padding: 1.25rem;
   margin: 1.5rem 0;
+  transition: border-color var(--transition-normal);
 }
 
 .params-fieldset legend {
   font-weight: 600;
-  color: #212529;
+  color: var(--color-text-primary);
   padding: 0 0.5rem;
+  transition: color var(--transition-normal);
 }
 
 .params-list {
@@ -21,8 +23,9 @@
   gap: 0.75rem;
   margin-bottom: 0.75rem;
   padding: 0.75rem;
-  background: #f8f9fa;
+  background: var(--color-background-tertiary);
   border-radius: 4px;
+  transition: background var(--transition-normal);
 }
 
 .param-input-group {
@@ -41,28 +44,31 @@
 .param-input {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--color-input-border);
   border-radius: 4px;
   font-size: 0.95rem;
+  background: var(--color-input-background);
+  color: var(--color-input-text);
+  transition: all var(--transition-fast);
 }
 
 .param-input:focus {
   outline: none;
-  border-color: #0d6efd;
-  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
 .param-input[aria-invalid="true"] {
-  border-color: #dc3545;
+  border-color: var(--color-error);
 }
 
 .param-input[aria-invalid="true"]:focus {
-  border-color: #dc3545;
+  border-color: var(--color-error);
   box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
 }
 
 .remove-btn {
-  background: #dc3545;
+  background: var(--color-button-danger-bg);
   color: white;
   border: none;
   border-radius: 4px;
@@ -72,20 +78,20 @@
   line-height: 1;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.2s;
+  transition: background var(--transition-fast);
 }
 
 .remove-btn:hover {
-  background: #c82333;
+  background: var(--color-button-danger-hover);
 }
 
 .remove-btn:focus-visible {
-  outline: 2px solid #dc3545;
+  outline: 2px solid var(--color-button-danger-bg);
   outline-offset: 2px;
 }
 
 .add-btn {
-  background: #28a745;
+  background: var(--color-button-success-bg);
   color: white;
   border: none;
   border-radius: 4px;
@@ -93,31 +99,33 @@
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background var(--transition-fast);
 }
 
 .add-btn:hover {
-  background: #218838;
+  background: var(--color-button-success-hover);
 }
 
 .add-btn:focus-visible {
-  outline: 2px solid #28a745;
+  outline: 2px solid var(--color-button-success-bg);
   outline-offset: 2px;
 }
 
 .error {
-  color: #dc3545;
+  color: var(--color-error);
   font-size: 0.85rem;
   margin: 0;
+  transition: color var(--transition-normal);
 }
 
 .form-error {
-  background: #f8d7da;
-  border: 1px solid #f5c6cb;
-  color: #721c24;
+  background: var(--color-error-light);
+  border: 1px solid var(--color-error);
+  color: var(--color-error-dark);
   padding: 0.75rem;
   border-radius: 4px;
   margin-top: 1rem;
+  transition: all var(--transition-normal);
 }
 
 .visually-hidden {

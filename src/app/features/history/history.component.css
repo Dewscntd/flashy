@@ -1,15 +1,17 @@
 .history-container {
-  background: white;
+  background: var(--color-surface-primary);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-lg);
+  transition: background var(--transition-normal), box-shadow var(--transition-normal);
 }
 
 .history-container h2 {
   margin: 0 0 1.5rem 0;
   font-size: 1.5rem;
-  color: #2d3748;
+  color: var(--color-text-primary);
   font-weight: 700;
+  transition: color var(--transition-normal);
 }
 
 .filter-section {
@@ -19,16 +21,18 @@
 .filter-input {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid #e2e8f0;
+  border: 2px solid var(--color-input-border);
   border-radius: 6px;
   font-size: 0.95rem;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
+  background: var(--color-input-background);
+  color: var(--color-input-text);
 }
 
 .filter-input:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: var(--color-input-border-focus);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
 .history-list {
@@ -45,25 +49,25 @@
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
-  background: #f7fafc;
-  border: 2px solid #e2e8f0;
+  background: var(--color-surface-secondary);
+  border: 2px solid var(--color-surface-border);
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   gap: 1rem;
 }
 
 .history-item:hover {
-  background: #edf2f7;
-  border-color: #667eea;
+  background: var(--color-surface-hover);
+  border-color: var(--color-brand-primary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  box-shadow: var(--shadow-md);
 }
 
 .history-item:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  border-color: var(--color-brand-primary);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
 }
 
 .history-content {
@@ -77,20 +81,22 @@
 .url {
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
-  color: #2d3748;
+  color: var(--color-text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 500;
+  transition: color var(--transition-normal);
 }
 
 .date {
   font-size: 0.8rem;
-  color: #718096;
+  color: var(--color-text-tertiary);
+  transition: color var(--transition-normal);
 }
 
 .delete-btn {
-  background: #e53e3e;
+  background: var(--color-button-danger-bg);
   color: white;
   border: none;
   border-radius: 50%;
@@ -100,26 +106,27 @@
   line-height: 1;
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .delete-btn:hover {
-  background: #c53030;
+  background: var(--color-button-danger-hover);
   transform: scale(1.1);
 }
 
 .delete-btn:focus-visible {
-  outline: 2px solid #e53e3e;
+  outline: 2px solid var(--color-button-danger-bg);
   outline-offset: 2px;
 }
 
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
-  color: #718096;
+  color: var(--color-text-tertiary);
+  transition: color var(--transition-normal);
 }
 
 .empty-state p {
@@ -130,7 +137,8 @@
 
 .empty-state small {
   font-size: 0.875rem;
-  color: #a0aec0;
+  color: var(--color-text-muted);
+  transition: color var(--transition-normal);
 }
 
 .visually-hidden {

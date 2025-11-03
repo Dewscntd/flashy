@@ -11,6 +11,7 @@ import { HistoryComponent } from './features/history/history.component';
 import { UrlPreviewComponent } from './features/url-builder/components/url-preview/url-preview.component';
 import { DynamicParamsComponent } from './features/url-builder/components/dynamic-params/dynamic-params.component';
 import { ToastNotificationComponent } from './shared/components/toast-notification/toast-notification.component';
+import { ThemeToggleComponent } from './shared/components/theme-toggle/theme-toggle.component';
 import { FormStateManagerService } from './core/services/form-state-manager.service';
 import { ClipboardService } from './core/services/clipboard.service';
 import { NotificationService } from './core/services/notification.service';
@@ -25,7 +26,8 @@ import { UrlBuild } from './core/models/url-build.model';
     HistoryComponent,
     UrlPreviewComponent,
     DynamicParamsComponent,
-    ToastNotificationComponent
+    ToastNotificationComponent,
+    ThemeToggleComponent
   ],
   providers: [FormStateManagerService],
   templateUrl: './app.component.html',
