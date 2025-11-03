@@ -42,12 +42,24 @@ describe('UrlShortenerCacheService', () => {
       const url = 'https://example.com';
       const shortUrl = 'https://tinyurl.com/abc';
 
-      service.set(url, shortUrl, 'TinyURL');
-
-      // Manipulate the timestamp to make it expired
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      stored[url].timestamp = Date.now() - (25 * 60 * 60 * 1000); // 25 hours ago
+      // Set directly in localStorage with expired timestamp
+      const expired = {
+        originalUrl: url,
+        shortUrl,
+        provider: 'TinyURL',
+        timestamp: Date.now() - (25 * 60 * 60 * 1000), // 25 hours ago
+        ttl: 24 * 60 * 60 * 1000
+      };
+      const stored: Record<string, any> = {};
+      stored[url] = expired;
       localStorage.setItem(STORAGE_KEY, JSON.stringify(stored));
+
+      // Clear in-memory cache and create new service instance that will load from localStorage
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        providers: [UrlShortenerCacheService]
+      });
+      service = TestBed.inject(UrlShortenerCacheService);
 
       expect(service.get(url)).toBeNull();
     });

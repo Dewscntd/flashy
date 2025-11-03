@@ -92,37 +92,42 @@ describe('ThemeService', () => {
 
     it('should toggle from light to dark', fakeAsync(() => {
       expect(service.currentTheme()).toBe('light');
-      
+
       service.toggleTheme();
-      tick();  // Allow effect to execute
-      
+      TestBed.flushEffects();  // Flush Angular effects
+      tick();  // Allow any pending async operations
+
       expect(service.currentTheme()).toBe('dark');
       expect(service.isDarkMode()).toBe(true);
     }));
 
     it('should toggle from dark to light', fakeAsync(() => {
       service.setTheme('dark');
+      TestBed.flushEffects();
       tick();
       expect(service.currentTheme()).toBe('dark');
-      
+
       service.toggleTheme();
+      TestBed.flushEffects();
       tick();
-      
+
       expect(service.currentTheme()).toBe('light');
       expect(service.isDarkMode()).toBe(false);
     }));
 
     it('should save theme preference after toggle', fakeAsync(() => {
       service.toggleTheme();
+      TestBed.flushEffects();
       tick();
-      
+
       expect(storageService.setItem).toHaveBeenCalledWith('app-theme', 'dark');
     }));
 
     it('should apply theme to document after toggle', fakeAsync(() => {
       service.toggleTheme();
+      TestBed.flushEffects();
       tick();
-      
+
       expect(document.documentElement.setAttribute).toHaveBeenCalledWith('data-theme', 'dark');
     }));
   });
@@ -135,33 +140,38 @@ describe('ThemeService', () => {
 
     it('should set theme to dark', fakeAsync(() => {
       service.setTheme('dark');
+      TestBed.flushEffects();
       tick();
-      
+
       expect(service.currentTheme()).toBe('dark');
       expect(service.isDarkMode()).toBe(true);
     }));
 
     it('should set theme to light', fakeAsync(() => {
       service.setTheme('dark');
+      TestBed.flushEffects();
       tick();
       service.setTheme('light');
+      TestBed.flushEffects();
       tick();
-      
+
       expect(service.currentTheme()).toBe('light');
       expect(service.isDarkMode()).toBe(false);
     }));
 
     it('should save theme preference when set', fakeAsync(() => {
       service.setTheme('dark');
+      TestBed.flushEffects();
       tick();
-      
+
       expect(storageService.setItem).toHaveBeenCalledWith('app-theme', 'dark');
     }));
 
     it('should apply theme to document when set', fakeAsync(() => {
       service.setTheme('dark');
+      TestBed.flushEffects();
       tick();
-      
+
       expect(document.documentElement.setAttribute).toHaveBeenCalledWith('data-theme', 'dark');
     }));
   });
@@ -174,35 +184,41 @@ describe('ThemeService', () => {
 
     it('should update isDarkMode signal when theme changes', fakeAsync(() => {
       expect(service.isDarkMode()).toBe(false);
-      
+
       service.setTheme('dark');
+      TestBed.flushEffects();
       tick();
-      
+
       expect(service.isDarkMode()).toBe(true);
     }));
 
     it('should update isDarkMode signal when toggling', fakeAsync(() => {
       expect(service.isDarkMode()).toBe(false);
-      
+
       service.toggleTheme();
+      TestBed.flushEffects();
       tick();
       expect(service.isDarkMode()).toBe(true);
-      
+
       service.toggleTheme();
+      TestBed.flushEffects();
       tick();
       expect(service.isDarkMode()).toBe(false);
     }));
 
     it('should maintain signal reactivity across multiple changes', fakeAsync(() => {
       service.setTheme('dark');
+      TestBed.flushEffects();
       tick();
       expect(service.isDarkMode()).toBe(true);
-      
+
       service.setTheme('light');
+      TestBed.flushEffects();
       tick();
       expect(service.isDarkMode()).toBe(false);
-      
+
       service.toggleTheme();
+      TestBed.flushEffects();
       tick();
       expect(service.isDarkMode()).toBe(true);
     }));
@@ -216,16 +232,36 @@ describe('ThemeService', () => {
 
     it('should persist theme changes to localStorage', fakeAsync(() => {
       service.setTheme('dark');
+      TestBed.flushEffects();
       tick();
-      
+
       expect(storageService.setItem).toHaveBeenCalledWith('app-theme', 'dark');
     }));
 
     it('should load persisted theme on next initialization', () => {
       // Simulate loading a new service instance with persisted dark theme
-      storageService.getItem.and.returnValue('dark');
+      // Need to reset TestBed to create a new service instance
+
+      // Restore original setAttribute before resetting
+      document.documentElement.setAttribute = originalSetAttribute;
+
+      TestBed.resetTestingModule();
+
+      const storageSpy = jasmine.createSpyObj('StorageService', ['getItem', 'setItem', 'removeItem']);
+      storageSpy.getItem.and.returnValue('dark');
+
+      TestBed.configureTestingModule({
+        providers: [
+          ThemeService,
+          { provide: StorageService, useValue: storageSpy }
+        ]
+      });
+
+      // Spy on document.documentElement.setAttribute for the new instance
+      spyOn(document.documentElement, 'setAttribute');
+
       const newService = TestBed.inject(ThemeService);
-      
+
       expect(newService.currentTheme()).toBe('dark');
       expect(newService.isDarkMode()).toBe(true);
     });

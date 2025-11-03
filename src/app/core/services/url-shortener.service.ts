@@ -7,7 +7,7 @@
 
 import { Injectable, inject } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, switchMap } from 'rxjs/operators';
 import {
   ShortenedUrlResult,
   UrlShortenerError,
@@ -110,19 +110,29 @@ export class UrlShortenerService {
     this.rateLimiter.recordRequest();
 
     return provider.shorten(url).pipe(
-      tap((result) => {
-        // Cache successful results
+      // Use switchMap to check result and handle fallback for failed results
+      switchMap((result) => {
+        // If successful, cache and return
         if (result.success) {
           this.cache.set(url, result.shortUrl, result.provider);
+          return of(result);
         }
-      }),
-      catchError((error) => {
+
+        // If failed, log and try next provider
         console.warn(
           `Provider ${provider.name} failed, trying fallback...`,
+          result.error
+        );
+        return this.tryProvidersWithFallback(url, providerIndex + 1);
+      }),
+      // Also handle thrown errors (not just failed results)
+      catchError((error) => {
+        console.warn(
+          `Provider ${provider.name} threw error, trying fallback...`,
           error
         );
 
-        // Try next provider in chain
+        // Try next provider in chain for thrown errors
         return this.tryProvidersWithFallback(url, providerIndex + 1);
       })
     );
