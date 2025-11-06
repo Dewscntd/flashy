@@ -129,8 +129,9 @@ export class TranslationService {
     this.loading.set(true);
 
     try {
+      // Use relative path to work with base-href in production
       const translation = await firstValueFrom(
-        this.http.get<Translation>(`/assets/i18n/${locale}.json`)
+        this.http.get<Translation>(`assets/i18n/${locale}.json`)
       );
 
       this.translations.set(translation);
