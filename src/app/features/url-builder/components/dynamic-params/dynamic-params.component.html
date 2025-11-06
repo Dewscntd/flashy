@@ -1,5 +1,5 @@
 <fieldset class="params-fieldset">
-  <legend>Dynamic Parameters</legend>
+  <legend>{{ 'urlBuilder.form.customParams.legend' | translate }}</legend>
 
   @if (paramsArray().controls.length > 0) {
     <div class="params-list" role="list">
@@ -12,13 +12,13 @@
           <div class="param-input-group">
             <div class="input-wrapper">
               <label [for]="'param-key-' + $index" class="visually-hidden">
-                Parameter key {{ $index + 1 }}
+                {{ 'urlBuilder.form.customParams.key.label' | translate }} {{ $index + 1 }}
               </label>
               <input
                 [id]="'param-key-' + $index"
                 type="text"
                 formControlName="key"
-                placeholder="key"
+                [placeholder]="'urlBuilder.form.customParams.key.placeholder' | translate"
                 class="param-input"
                 [attr.aria-invalid]="hasError(getParamGroup($index), 'key')"
                 [attr.aria-describedby]="hasError(getParamGroup($index), 'key') ? 'key-error-' + $index : null">
@@ -31,13 +31,13 @@
 
             <div class="input-wrapper">
               <label [for]="'param-value-' + $index" class="visually-hidden">
-                Parameter value {{ $index + 1 }}
+                {{ 'urlBuilder.form.customParams.value.label' | translate }} {{ $index + 1 }}
               </label>
               <input
                 [id]="'param-value-' + $index"
                 type="text"
                 formControlName="value"
-                placeholder="value"
+                [placeholder]="'urlBuilder.form.customParams.value.placeholder' | translate"
                 class="param-input"
                 [attr.aria-invalid]="hasError(getParamGroup($index), 'value')"
                 [attr.aria-describedby]="hasError(getParamGroup($index), 'value') ? 'value-error-' + $index : null">
@@ -53,8 +53,11 @@
             type="button"
             (click)="handleRemove($index)"
             class="remove-btn"
-            [attr.aria-label]="'Remove parameter ' + ($index + 1)"
-            title="Remove parameter">
+            tuiButton
+            appearance="outline"
+            size="s"
+            [attr.aria-label]="('urlBuilder.form.customParams.removeButton' | translate) + ' ' + ($index + 1)"
+            [title]="'urlBuilder.form.customParams.removeButton' | translate">
             &times;
           </button>
         </div>
@@ -66,13 +69,15 @@
     type="button"
     (click)="handleAdd()"
     class="add-btn"
-    aria-label="Add new parameter">
-    + Add Parameter
+    tuiButton
+    appearance="primary"
+    [attr.aria-label]="'urlBuilder.form.customParams.addButton' | translate">
+    {{ 'urlBuilder.form.customParams.addButton' | translate }}
   </button>
 
   @if (paramsArray().errors?.['duplicateKeys']; as error) {
     <div class="form-error" role="alert">
-      <strong>Duplicate keys found:</strong> {{ error.duplicates.join(', ') }}
+      <strong>{{ 'common.validation.duplicateKey' | translate }}:</strong> {{ error.duplicates.join(', ') }}
     </div>
   }
 </fieldset>

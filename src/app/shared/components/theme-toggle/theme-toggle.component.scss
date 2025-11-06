@@ -1,0 +1,110 @@
+@mixin glassy-button($blur: 16px) {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
+  backdrop-filter: blur($blur) saturate(1.05);
+  color: #fff;
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2);
+}
+
+.theme-toggle {
+  @include glassy-button();
+
+  &:hover {
+    transform: translateY(-2px) scale(1.05);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.18));
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+
+  &:focus-visible {
+    // WCAG 2.1 AA: High-contrast focus ring visible on gradient background
+    outline: 3px solid rgba(255, 255, 255, 0.95);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.4),
+                0 16px 32px rgba(15, 23, 42, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+
+  .theme-icon {
+    width: 22px;
+    height: 22px;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+  }
+
+  .theme-icon--sun {
+    animation: rotate 20s linear infinite;
+  }
+
+  .theme-icon--moon {
+    animation: pulse 3s ease-in-out infinite;
+  }
+}
+
+:host-context([data-theme="dark"]) .theme-toggle {
+  border-color: rgba(148, 163, 184, 0.35);
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.65));
+
+  &:hover {
+    border-color: rgba(148, 163, 184, 0.55);
+  }
+
+  &:focus-visible {
+    // WCAG 2.1 AA: High-contrast focus ring for dark mode
+    outline: 3px solid rgba(147, 197, 253, 0.95);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.5),
+                0 16px 32px rgba(0, 0, 0, 0.4);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle {
+    transition: background 0.2s, border-color 0.2s;
+
+    &:hover,
+    &:active {
+      transform: none;
+    }
+
+    .theme-icon {
+      transition: none;
+    }
+
+    .theme-icon--sun,
+    .theme-icon--moon {
+      animation: none;
+    }
+  }
+}

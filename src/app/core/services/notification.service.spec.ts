@@ -4,6 +4,7 @@
  */
 
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NotificationService } from './notification.service';
 
 describe('NotificationService', () => {
@@ -11,6 +12,7 @@ describe('NotificationService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       providers: [NotificationService]
     });
     service = TestBed.inject(NotificationService);
@@ -59,7 +61,7 @@ describe('NotificationService', () => {
     });
 
     it('should use custom duration when specified', () => {
-      service.success('Test message', 5000);
+      service.success('Test message', undefined, 5000);
 
       const notifications = service.notifications$();
       expect(notifications[0].duration).toBe(5000);
@@ -76,7 +78,7 @@ describe('NotificationService', () => {
     }));
 
     it('should auto-dismiss after custom duration', fakeAsync(() => {
-      service.success('Test message', 1000);
+      service.success('Test message', undefined, 1000);
 
       expect(service.notifications$().length).toBe(1);
 
@@ -86,7 +88,7 @@ describe('NotificationService', () => {
     }));
 
     it('should not dismiss before duration elapses', fakeAsync(() => {
-      service.success('Test message', 3000);
+      service.success('Test message', undefined, 3000);
 
       tick(2000);
 
@@ -119,7 +121,7 @@ describe('NotificationService', () => {
     }));
 
     it('should use custom duration for errors', fakeAsync(() => {
-      service.error('Test error', 2000);
+      service.error('Test error', undefined, 2000);
 
       tick(2000);
 
@@ -236,8 +238,8 @@ describe('NotificationService', () => {
     });
 
     it('should prevent auto-dismiss of cleared notifications', fakeAsync(() => {
-      service.success('Message 1', 1000);
-      service.success('Message 2', 2000);
+      service.success('Message 1', undefined, 1000);
+      service.success('Message 2', undefined, 2000);
 
       service.clearAll();
 
@@ -281,9 +283,9 @@ describe('NotificationService', () => {
     });
 
     it('should auto-dismiss notifications independently', fakeAsync(() => {
-      service.success('Message 1', 1000);
-      service.success('Message 2', 2000);
-      service.success('Message 3', 3000);
+      service.success('Message 1', undefined, 1000);
+      service.success('Message 2', undefined, 2000);
+      service.success('Message 3', undefined, 3000);
 
       expect(service.notifications$().length).toBe(3);
 
@@ -332,7 +334,7 @@ describe('NotificationService', () => {
     });
 
     it('should handle zero duration (no auto-dismiss)', fakeAsync(() => {
-      service.success('Persistent message', 0);
+      service.success('Persistent message', undefined, 0);
 
       tick(10000); // Wait a long time
 
@@ -340,7 +342,7 @@ describe('NotificationService', () => {
     }));
 
     it('should handle negative duration (no auto-dismiss)', fakeAsync(() => {
-      service.success('Message', -1000);
+      service.success('Message', undefined, -1000);
 
       tick(10000);
 
@@ -348,7 +350,7 @@ describe('NotificationService', () => {
     }));
 
     it('should handle very large duration', fakeAsync(() => {
-      service.success('Message', 999999);
+      service.success('Message', undefined, 999999);
 
       tick(10000); // Don't wait the full duration
 
@@ -358,7 +360,7 @@ describe('NotificationService', () => {
 
   describe('notification properties', () => {
     it('should create notification with all required properties', () => {
-      service.success('Test message', 5000);
+      service.success('Test message', undefined, 5000);
 
       const notification = service.notifications$()[0];
       expect(notification.id).toBeDefined();
@@ -392,7 +394,7 @@ describe('NotificationService', () => {
   describe('integration scenarios', () => {
     it('should handle rapid successive notifications', fakeAsync(() => {
       for (let i = 0; i < 10; i++) {
-        service.success(`Message ${i}`, 1000);
+        service.success(`Message ${i}`, undefined, 1000);
       }
 
       expect(service.notifications$().length).toBe(10);
@@ -403,7 +405,7 @@ describe('NotificationService', () => {
     }));
 
     it('should support dismiss during auto-dismiss timer', fakeAsync(() => {
-      service.success('Message', 3000);
+      service.success('Message', undefined, 3000);
 
       const id = service.notifications$()[0].id;
 
@@ -420,8 +422,8 @@ describe('NotificationService', () => {
     }));
 
     it('should support clearAll during auto-dismiss timers', fakeAsync(() => {
-      service.success('Message 1', 2000);
-      service.success('Message 2', 3000);
+      service.success('Message 1', undefined, 2000);
+      service.success('Message 2', undefined, 3000);
 
       tick(1000);
 
@@ -433,9 +435,9 @@ describe('NotificationService', () => {
     }));
 
     it('should maintain notification order during partial dismissal', fakeAsync(() => {
-      service.success('Keep', 10000);
-      service.success('Remove', 1000);
-      service.success('Keep', 10000);
+      service.success('Keep', undefined, 10000);
+      service.success('Remove', undefined, 1000);
+      service.success('Keep', undefined, 10000);
 
       tick(1000);
 

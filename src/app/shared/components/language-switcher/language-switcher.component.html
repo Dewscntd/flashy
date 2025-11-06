@@ -1,0 +1,33 @@
+<div class="language-switcher">
+  <button
+    class="language-toggle-button"
+    tuiButton
+    appearance="flat"
+    size="s"
+    [attr.aria-label]="'Change language. Current: ' + currentLocaleName()"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-haspopup]="'menu'"
+    (click)="toggleDropdown()"
+    (keydown)="onKeyDown($event)">
+    <span class="language-code">{{ currentLocale() }}</span>
+  </button>
+
+  @if (isOpen()) {
+    <div class="language-dropdown" role="menu" (keydown)="onKeyDown($event)">
+      @for (locale of supportedLocales; track locale.code; let idx = $index) {
+        <button
+          type="button"
+          class="language-option"
+          [class.active]="locale.code === currentLocale()"
+          [class.focused]="isOptionFocused(idx)"
+          role="menuitem"
+          [tabindex]="isOptionFocused(idx) ? 0 : -1"
+          (click)="selectLocale(locale.code)"
+          [attr.aria-label]="'Switch to ' + locale.nativeName">
+          <span class="locale-native">{{ locale.nativeName }}</span>
+          <span class="locale-name">({{ locale.name }})</span>
+        </button>
+      }
+    </div>
+  }
+</div>

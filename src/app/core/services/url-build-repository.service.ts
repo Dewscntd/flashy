@@ -7,9 +7,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { UrlBuild } from '../models/url-build.model';
 import { StorageService } from './storage.service';
-
-const STORAGE_KEY = 'url_builder_history';
-const MAX_BUILDS = 5;
+import { HISTORY_STORAGE_KEY, MAX_HISTORY_BUILDS } from '../../features/history/history.consts';
+import { isValidUrlBuild } from '../../features/history/history.utils';
 
 /**
  * Repository for managing URL build entities.
@@ -42,7 +41,7 @@ export class UrlBuildRepositoryService {
 
     this.builds.update(current => {
       const updated = [newBuild, ...current];
-      const limited = updated.slice(0, MAX_BUILDS);
+      const limited = updated.slice(0, MAX_HISTORY_BUILDS);
       this.persistToStorage(limited);
       return limited;
     });
@@ -94,7 +93,7 @@ export class UrlBuildRepositoryService {
    */
   clear(): void {
     this.builds.set([]);
-    this.storage.removeItem(STORAGE_KEY);
+    this.storage.removeItem(HISTORY_STORAGE_KEY);
   }
 
   /**
@@ -107,7 +106,7 @@ export class UrlBuildRepositoryService {
       return [];
     }
 
-    const stored = this.storage.getItem<UrlBuild[]>(STORAGE_KEY);
+    const stored = this.storage.getItem<UrlBuild[]>(HISTORY_STORAGE_KEY);
 
     if (!stored || !Array.isArray(stored)) {
       return [];
@@ -115,8 +114,8 @@ export class UrlBuildRepositoryService {
 
     // Validate and sanitize stored data
     return stored
-      .filter(this.isValidUrlBuild)
-      .slice(0, MAX_BUILDS);
+      .filter(isValidUrlBuild)
+      .slice(0, MAX_HISTORY_BUILDS);
   }
 
   /**
@@ -126,35 +125,7 @@ export class UrlBuildRepositoryService {
    */
   private persistToStorage(builds: ReadonlyArray<UrlBuild>): void {
     if (this.storage.isAvailable()) {
-      this.storage.setItem(STORAGE_KEY, builds);
+      this.storage.setItem(HISTORY_STORAGE_KEY, builds);
     }
-  }
-
-  /**
-   * Type guard to validate UrlBuild structure.
-   *
-   * @param build - Object to validate
-   * @returns true if valid UrlBuild
-   */
-  private isValidUrlBuild(build: unknown): build is UrlBuild {
-    if (!build || typeof build !== 'object') {
-      return false;
-    }
-
-    const b = build as Partial<UrlBuild>;
-
-    return !!(
-      b.id &&
-      typeof b.id === 'string' &&
-      b.finalUrl &&
-      typeof b.finalUrl === 'string' &&
-      b.createdAt &&
-      typeof b.createdAt === 'string' &&
-      b.form &&
-      typeof b.form === 'object' &&
-      'baseUrl' in b.form &&
-      'params' in b.form &&
-      Array.isArray(b.form.params)
-    );
   }
 }

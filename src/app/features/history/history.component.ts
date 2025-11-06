@@ -4,20 +4,26 @@
  * Fully declarative with signals and computed values.
  */
 
-import { Component, computed, inject, signal, output } from '@angular/core';
+import { Component, computed, inject, signal, output, ChangeDetectionStrategy } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { UrlBuildRepositoryService } from '../../core/services/url-build-repository.service';
 import { UrlBuild } from '../../core/models/url-build.model';
+import { matchesBuild } from './history.utils';
+import { TuiButton } from '@taiga-ui/core/components/button';
+import { TuiDialogService } from '@taiga-ui/core';
+import { TranslatePipe } from '../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [DatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [DatePipe, TuiButton, TranslatePipe],
   templateUrl: './history.component.html',
-  styleUrl: './history.component.css'
+  styleUrl: './history.component.scss'
 })
 export class HistoryComponent {
   private readonly repository = inject(UrlBuildRepositoryService);
+  private readonly dialogs = inject(TuiDialogService);
 
   /**
    * Emits when user wants to load a build into the form.
@@ -46,7 +52,7 @@ export class HistoryComponent {
     }
 
     return this.allBuilds().filter(build =>
-      this.matchesBuild(build, term)
+      matchesBuild(build, term)
     );
   });
 
@@ -66,47 +72,29 @@ export class HistoryComponent {
   }
 
   /**
-   * Deletes a build from the repository.
+   * Deletes a build from the repository with confirmation dialog.
+   * Uses TaigaUI dialog for better UX and accessibility.
    */
   onDeleteBuild(event: Event, build: UrlBuild): void {
     event.stopPropagation(); // Prevent triggering the load action
 
-    if (confirm('Are you sure you want to delete this build?')) {
-      this.repository.delete(build.id);
-    }
-  }
-
-  /**
-   * Checks if a build matches the search term.
-   * Searches in URL, UTM parameters, and custom parameters.
-   */
-  private matchesBuild(build: UrlBuild, term: string): boolean {
-    // Search in final URL
-    if (build.finalUrl.toLowerCase().includes(term)) {
-      return true;
-    }
-
-    // Search in base URL
-    if (build.form.baseUrl.toLowerCase().includes(term)) {
-      return true;
-    }
-
-    // Search in UTM parameters
-    const utmValues = [
-      build.form.utmSource,
-      build.form.utmMedium,
-      build.form.utmCampaign
-    ].filter(Boolean);
-
-    if (utmValues.some(value => value?.toLowerCase().includes(term))) {
-      return true;
-    }
-
-    // Search in custom parameters
-    return build.form.params.some(
-      param =>
-        param.key.toLowerCase().includes(term) ||
-        param.value.toLowerCase().includes(term)
+    // Show confirmation dialog using TaigaUI
+    const confirmation = this.dialogs.open<boolean>(
+      'Are you sure you want to delete this URL build? This action cannot be undone.',
+      {
+        label: 'Confirm Deletion',
+        size: 's',
+        dismissible: true,
+        data: {
+          buttons: ['Cancel', 'Delete']
+        }
+      }
     );
+
+    confirmation.subscribe((result: boolean) => {
+      if (result) {
+        this.repository.delete(build.id);
+      }
+    });
   }
 }

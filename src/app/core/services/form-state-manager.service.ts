@@ -4,8 +4,10 @@
  * Acts as a facade/coordinator between multiple services.
  */
 
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { debounceTime } from 'rxjs/operators';
 import { UrlBuildForm, QueryParameter, ConstructedUrl } from '../models/url-build.model';
 import { UrlBuilderService } from './url-builder.service';
 import { absoluteUrlValidator, uniqueKeysValidator, validKeyValidator } from '../validators/url-validators';
@@ -33,30 +35,46 @@ export class FormStateManagerService {
   private readonly fb = inject(FormBuilder);
   private readonly urlBuilder = inject(UrlBuilderService);
 
-  // Signal to trigger form value changes
-  private readonly formValueChanged = signal(0);
-
   /**
    * The main form group for URL building.
+   * Initialized in constructor before being used in signals.
    */
-  readonly form: UrlBuilderFormGroup;
+  readonly form: UrlBuilderFormGroup = this.fb.group({
+    baseUrl: ['', [Validators.required, absoluteUrlValidator()]],
+    utmSource: [''],
+    utmMedium: [''],
+    utmCampaign: [''],
+    params: this.fb.array<FormGroup<{
+      key: FormControl<string | null>;
+      value: FormControl<string | null>;
+    }>>([], [uniqueKeysValidator()])
+  });
+
+  /**
+   * Signal that emits the current form value on changes.
+   * Converts the Observable valueChanges to a signal using toSignal().
+   * PERFORMANCE: Includes 300ms debouncing to reduce unnecessary URL rebuilds during typing.
+   * More efficient than counter signal + subscription pattern.
+   */
+  private readonly formValue = toSignal(
+    this.form.valueChanges.pipe(debounceTime(300)),
+    { initialValue: this.form.value }
+  );
 
   /**
    * Computed signal for the constructed URL.
-   * Automatically recalculates when form values change.
+   * Automatically recalculates when form values change via formValue signal.
    */
   readonly constructedUrl = computed<ConstructedUrl | null>(() => {
-    // Track form changes to trigger recomputation
-    const changeCount = this.formValueChanged();
+    // formValue signal automatically tracks form changes
+    const currentValue = this.formValue();
 
-    // Get current form values
-    const formValue = this.form.getRawValue();
     const formData: Partial<UrlBuildForm> = {
-      baseUrl: formValue.baseUrl ?? undefined,
-      utmSource: formValue.utmSource ?? undefined,
-      utmMedium: formValue.utmMedium ?? undefined,
-      utmCampaign: formValue.utmCampaign ?? undefined,
-      params: (formValue.params ?? [])
+      baseUrl: currentValue.baseUrl ?? undefined,
+      utmSource: currentValue.utmSource ?? undefined,
+      utmMedium: currentValue.utmMedium ?? undefined,
+      utmCampaign: currentValue.utmCampaign ?? undefined,
+      params: (currentValue.params ?? [])
         .filter((p): p is QueryParameter => !!(p.key && p.value))
         .map(p => ({ key: p.key!, value: p.value! }))
     };
@@ -69,8 +87,8 @@ export class FormStateManagerService {
    * A form is saveable if the base URL is valid, even if params are empty.
    */
   readonly canSave = computed(() => {
-    // Track form changes
-    this.formValueChanged();
+    // Track form changes via formValue signal
+    this.formValue();
 
     // Check if we have a constructed URL (means base URL is valid)
     const hasValidUrl = !!this.constructedUrl();
@@ -81,25 +99,6 @@ export class FormStateManagerService {
     // Form is saveable if base URL is valid, regardless of empty param fields
     return baseUrlValid && hasValidUrl;
   });
-
-  constructor() {
-    // Initialize the form with validators
-    this.form = this.fb.group({
-      baseUrl: ['', [Validators.required, absoluteUrlValidator()]],
-      utmSource: [''],
-      utmMedium: [''],
-      utmCampaign: [''],
-      params: this.fb.array<FormGroup<{
-        key: FormControl<string | null>;
-        value: FormControl<string | null>;
-      }>>([], [uniqueKeysValidator()])
-    });
-
-    // Subscribe to form changes to trigger computed signals
-    this.form.valueChanges.subscribe(() => {
-      this.formValueChanged.update(v => v + 1);
-    });
-  }
 
   /**
    * Gets the params FormArray.

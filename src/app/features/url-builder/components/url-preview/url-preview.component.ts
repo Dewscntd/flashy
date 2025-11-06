@@ -4,16 +4,21 @@
  * Fully declarative and composable.
  */
 
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConstructedUrl } from '../../../../core/models/url-build.model';
+import { TuiButton } from '@taiga-ui/core/components/button';
+import { QrCodePreviewComponent } from '../../../../shared/components/qr-code-preview/qr-code-preview.component';
+import { QrCodeOptions, QrCodeExportFormat } from '../../../../core/models/qr-code.model';
+import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-url-preview',
   standalone: true,
-  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, TuiButton, QrCodePreviewComponent, TranslatePipe],
   templateUrl: './url-preview.component.html',
-  styleUrl: './url-preview.component.css'
+  styleUrl: './url-preview.component.scss'
 })
 export class UrlPreviewComponent {
   /**
@@ -37,6 +42,21 @@ export class UrlPreviewComponent {
   readonly shortenedUrl = input<string | null>(null);
 
   /**
+   * Whether QR code section is visible.
+   */
+  readonly qrCodeVisible = input<boolean>(false);
+
+  /**
+   * Whether QR code is generating.
+   */
+  readonly qrCodeGenerating = input<boolean>(false);
+
+  /**
+   * QR code generation options.
+   */
+  readonly qrCodeOptions = input<QrCodeOptions | null>(null);
+
+  /**
    * Emitted when user clicks copy button.
    */
   readonly copyClicked = output<void>();
@@ -50,6 +70,26 @@ export class UrlPreviewComponent {
    * Emitted when user clicks shorten URL button.
    */
   readonly shortenClicked = output<void>();
+
+  /**
+   * Emitted when user requests QR code generation.
+   */
+  readonly qrCodeRequested = output<void>();
+
+  /**
+   * Emitted when user requests QR code download.
+   */
+  readonly qrCodeDownloadRequested = output<QrCodeExportFormat>();
+
+  /**
+   * Emitted when user requests QR code copy.
+   */
+  readonly qrCodeCopyRequested = output<void>();
+
+  /**
+   * Emitted when user changes QR code options.
+   */
+  readonly qrCodeOptionsChanged = output<Partial<QrCodeOptions>>();
 
   /**
    * Handles copy button click.
@@ -74,5 +114,41 @@ export class UrlPreviewComponent {
     if (!this.shorteningInProgress()) {
       this.shortenClicked.emit();
     }
+  }
+
+  /**
+   * Handles QR code generation button click.
+   */
+  onQrCodeGenerate(): void {
+    this.qrCodeRequested.emit();
+  }
+
+  /**
+   * Handles QR code download request.
+   */
+  onQrCodeDownload(format: QrCodeExportFormat): void {
+    this.qrCodeDownloadRequested.emit(format);
+  }
+
+  /**
+   * Handles QR code copy request.
+   */
+  onQrCodeCopy(): void {
+    this.qrCodeCopyRequested.emit();
+  }
+
+  /**
+   * Handles QR code options change.
+   */
+  onQrCodeOptionsChange(options: Partial<QrCodeOptions>): void {
+    this.qrCodeOptionsChanged.emit(options);
+  }
+
+  /**
+   * Gets URL for QR code generation.
+   * Prefers shortened URL if available, otherwise uses original URL.
+   */
+  getQrCodeUrl(): string {
+    return this.shortenedUrl() || this.urlData()?.url || '';
   }
 }

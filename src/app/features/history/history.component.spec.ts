@@ -4,6 +4,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
 import { HistoryComponent } from './history.component';
 import { UrlBuildRepositoryService } from '../../core/services/url-build-repository.service';
@@ -35,7 +36,7 @@ describe('HistoryComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [HistoryComponent],
+      imports: [HistoryComponent, HttpClientTestingModule],
       providers: [
         { provide: UrlBuildRepositoryService, useValue: mockRepository }
       ]

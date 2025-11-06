@@ -1,259 +1,432 @@
-# URL Builder - Modern Angular Application
+# Flashy - Modern URL Builder with QR Code Generation
 
-A production-grade URL builder application built with modern Angular 19 features, demonstrating SOLID principles, clean architecture, and advanced TypeScript patterns.
+A production-grade URL builder application built with Angular 20, demonstrating Clean Architecture, SOLID principles, and modern reactive patterns.
 
-- **Angular Version:** 19.0.0
-- **Time Spent:** Approximately 5-6 hours
+## 📋 Project Information
+
+- **Angular Version:** 20.3.9
+- **TypeScript Version:** 5.7
 - **Architecture:** Clean Architecture + Domain-Driven Design
+- **Time Spent:** ~20 hours
+  - Initial implementation: 6 hours
+  - Dark mode + i18n: 4 hours
+  - QR code generation: 3 hours
+  - URL shortening integration: 3 hours
+  - Testing + optimization: 4 hours
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- npm 9+
+
+### Installation & Running
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+npm start
+# or
+ng serve
+
+# Run unit tests
+npm test
+
+# Run E2E tests
+npx playwright test
+
+# Build for production
+npm run build
+```
+
+Application will be available at `http://localhost:4200/`
 
 ## ✨ Features
 
-### Core Functionality
-- **URL Form Builder** with typed reactive forms
-  - Required base URL with robust validation
-  - Optional UTM parameters (source, medium, campaign)
-  - Dynamic key-value parameter pairs with duplicate key prevention
-  - Real-time validation feedback
+### 🔗 URL Builder
+- **Base URL validation** with protocol requirement
+- **UTM parameters** (source, medium, campaign, term, content)
+- **Dynamic custom parameters** with duplicate key prevention
+- **Real-time URL preview** with character count
+- **Copy to clipboard** with toast feedback
 
-- **Live URL Preview**
-  - Real-time URL construction using computed signals
-  - Character count display
-  - Parameter count display
-  - Copy to clipboard with feedback
+### 📊 QR Code Generation
+- **Three formats**: PNG, JPEG, SVG
+- **Customizable options**:
+  - Error correction levels (Low, Medium, Quartile, High)
+  - Size adjustment (128px - 1024px)
+  - Color customization (foreground/background)
+  - Margin control
+- **Copy QR to clipboard** with transparent background
+- **Download QR codes** in preferred format
+- **Real-time preview** updates with URL changes
 
-- **Recent Builds History**
-  - Last 5 saved builds with localStorage persistence
-  - Advanced search/filter (searches URL, UTM params, and custom params)
-  - Click to reload into form
-  - Delete individual builds
-  - Lazy-loaded using `@defer` for optimal performance
+### 🔗 URL Shortening
+- **Multi-provider support** with fallback system:
+  - TinyURL (primary)
+  - is.gd (fallback)
+  - v.gd (secondary fallback)
+- **Automatic retry logic** on provider failure
+- **Toast notifications** for success/error states
+- **One-click copy** of shortened URL
 
-- **User Experience**
-  - Toast notifications for all actions (success, error, warning, info)
-  - Accessible keyboard navigation
-  - ARIA labels and screen reader support
-  - Responsive design
-  - Professional UI with modern styling
+### 📜 Build History
+- **Persistent storage** using localStorage
+- **Advanced search/filter** across all fields
+- **Click to reload** builds into form
+- **Delete confirmation** dialog with accessibility
+- **Lazy-loaded** using @defer for performance
+- **Last 10 builds** with timestamps
 
-## 🛠 Tech Stack
+### 🎨 Dark Mode
+- **System preference detection** on first load
+- **Manual toggle** with smooth transitions
+- **Persistent preference** across sessions
+- **Comprehensive theme coverage** for all components
+- **WCAG 2.1 AA compliant** contrast ratios
 
-- **Angular 19** - Latest stable version
-- **TypeScript 5.6** - Strict mode enabled
-- **Standalone Components** - No NgModules
-- **Angular Signals** - Reactive state management
-- **Typed Reactive Forms** - Full type safety
-- **Modern Control Flow** - `@if`, `@for`, `@defer`
-- **RxJS 7.8** - For complex async operations
+### 🌍 Internationalization (i18n)
+- **Multi-language support**: English, Spanish, Hebrew
+- **Keyboard navigation** for language switcher
+- **RTL support** for Hebrew (dir attribute)
+- **Dynamic content updates** using signals
+- **Lazy-loaded translations** with caching
+
+### ♿ Accessibility
+- **WCAG 2.1 AA compliance** (95%+)
+- **Skip navigation link** for keyboard users
+- **Full keyboard navigation** (Tab, Enter, Space, Arrows)
+- **ARIA labels and roles** throughout
+- **Touch targets** minimum 44x44px
+- **Screen reader support** with live regions
+- **Focus management** in dialogs
 
 ## 🏗 Architecture
 
-This application follows **Clean Architecture** and **SOLID principles** with clear separation of concerns.
-
-### Layered Architecture
+### Clean Architecture Layers
 
 ```
-┌─────────────────────────────────────────┐
-│      Presentation Layer                 │
-│  (Components - Declarative UI)          │
-├─────────────────────────────────────────┤
-│      Application Layer                  │
-│  (Services - Orchestration)             │
-├─────────────────────────────────────────┤
-│      Domain Layer                       │
-│  (Models, Business Logic, Validators)   │
-├─────────────────────────────────────────┤
-│      Infrastructure Layer               │
-│  (Storage, Clipboard, Notifications)    │
-└─────────────────────────────────────────┘
+┌─────────────────────────────────────────────────┐
+│         Presentation Layer                      │
+│  (Components - Smart/Dumb pattern)              │
+├─────────────────────────────────────────────────┤
+│         Application Layer                       │
+│  (Services - Business orchestration)            │
+├─────────────────────────────────────────────────┤
+│         Domain Layer                            │
+│  (Models, Validators, Business rules)           │
+├─────────────────────────────────────────────────┤
+│         Infrastructure Layer                    │
+│  (Storage, HTTP, External APIs)                 │
+└─────────────────────────────────────────────────┘
 ```
 
 ### SOLID Principles Applied
 
-#### 1. Single Responsibility Principle (SRP)
+#### Single Responsibility Principle (SRP)
 Each service has ONE clear responsibility:
-- `UrlBuilderService` - Builds URLs from data
-- `ClipboardService` - Handles clipboard operations
-- `StorageService` - Manages localStorage
-- `NotificationService` - Manages user notifications
-- `FormStateManagerService` - Manages form state
-- `UrlBuildRepositoryService` - Handles data persistence
+- `UrlBuilderService` - URL construction logic
+- `QrCodeGeneratorService` - QR code generation
+- `QrCodeDownloadService` - QR code export
+- `QrCodeConfigurationService` - QR settings management
+- `UrlShortenerService` - URL shortening API integration
+- `FormStateManagerService` - Form state orchestration
+- `ThemeService` - Dark mode state management
+- `TranslationService` - i18n content management
+- `StorageService` - localStorage abstraction
+- `ClipboardService` - Clipboard API wrapper
+- `NotificationService` - Toast notifications
 
-#### 2. Open/Closed Principle
-- Services are open for extension, closed for modification
-- Validators are pure functions that can be composed
-- Components accept inputs and emit outputs (no tight coupling)
+#### Open/Closed Principle
+- Services extensible via DI without modification
+- URL shortener supports multiple providers via configuration
+- QR code generators can be swapped/extended
 
-#### 3. Liskov Substitution Principle
-- Services can be mocked/replaced without breaking the system
-- All dependencies are injected via DI
+#### Liskov Substitution Principle
+- All services are interface-driven and mockable
+- Dependencies injected via Angular DI
 
-#### 4. Interface Segregation Principle
-- Small, focused interfaces (models)
-- Components only depend on what they need
+#### Interface Segregation Principle
+- Small, focused TypeScript interfaces
+- Components depend only on what they use
 
-#### 5. Dependency Inversion Principle
-- High-level modules (components) depend on abstractions (services)
-- All dependencies flow through DI container
-
-## How to Run
-
-1.  **Install Dependencies:**
-    ```bash
-    npm install
-    ```
-2.  **Run the Development Server:**
-    ```bash
-    ng serve
-    ```
-3.  Open your browser to `http://localhost:4200/`.
+#### Dependency Inversion Principle
+- High-level components depend on service abstractions
+- Low-level details (APIs, storage) hidden behind interfaces
 
 ## 📁 Project Structure
 
 ```
 src/app/
-├── core/                           # Core domain and infrastructure
+├── core/                                  # Core domain & infrastructure
 │   ├── models/
-│   │   └── url-build.model.ts     # Domain models, interfaces, type guards
+│   │   ├── url-build.model.ts           # URL builder domain models
+│   │   ├── qr-code.model.ts             # QR code configuration types
+│   │   ├── url-shortener.model.ts       # URL shortening types
+│   │   └── i18n.model.ts                # Translation types
 │   ├── services/
-│   │   ├── url-builder.service.ts        # Domain: URL construction logic
-│   │   ├── form-state-manager.service.ts # Application: Form orchestration
-│   │   ├── url-build-repository.service.ts # Data persistence with signals
-│   │   ├── clipboard.service.ts          # Infrastructure: Clipboard API
-│   │   ├── notification.service.ts       # Infrastructure: Toast notifications
-│   │   └── storage.service.ts            # Infrastructure: localStorage wrapper
-│   └── validators/
-│       └── url-validators.ts      # Pure validator factory functions
+│   │   ├── url-builder.service.ts              # Domain: URL construction
+│   │   ├── qr-code-generator.service.ts        # Domain: QR generation
+│   │   ├── qr-code-download.service.ts         # Infrastructure: QR export
+│   │   ├── qr-code-configuration.service.ts    # Application: QR settings
+│   │   ├── url-shortener.service.ts            # Infrastructure: API integration
+│   │   ├── form-state-manager.service.ts       # Application: Form orchestration
+│   │   ├── url-build-repository.service.ts     # Data: Persistence
+│   │   ├── theme.service.ts                    # Application: Dark mode
+│   │   ├── translation.service.ts              # Application: i18n
+│   │   ├── clipboard.service.ts                # Infrastructure: Clipboard
+│   │   ├── notification.service.ts             # Infrastructure: Toasts
+│   │   └── storage.service.ts                  # Infrastructure: localStorage
+│   ├── validators/
+│   │   └── url-validators.ts            # Pure validator functions
+│   └── pipes/
+│       └── translate.pipe.ts            # Pure i18n pipe with caching
 │
-├── features/                       # Feature modules (domain-specific)
+├── features/                             # Feature modules
 │   ├── url-builder/
+│   │   ├── url-builder.component.ts           # Smart component
+│   │   ├── url-builder.utils.ts               # Pure helper functions
 │   │   └── components/
-│   │       ├── url-preview/       # URL display and actions
-│   │       └── dynamic-params/    # Parameter list management
-│   └── history/
-│       └── history.component.ts   # Build history with filtering
+│   │       ├── url-preview/                   # URL display & actions
+│   │       └── dynamic-params/                # Parameter management
+│   ├── history/
+│   │   ├── history.component.ts               # Build history
+│   │   ├── history.consts.ts                  # Constants
+│   │   └── history.utils.ts                   # Pure utility functions
+│   └── qr-code-display/
+│       └── qr-code-display.component.ts       # QR code UI & actions
 │
-├── shared/                         # Shared/reusable components
-│   └── components/
-│       └── toast-notification/    # Global toast system
+├── shared/                               # Shared components
+│   ├── components/
+│   │   ├── toast-notification/               # Global toast system
+│   │   ├── theme-toggle/                     # Dark mode toggle
+│   │   └── language-switcher/                # i18n language picker
+│   └── utils/
+│       ├── type-guards.util.ts               # Runtime type checking
+│       └── url.util.ts                       # URL manipulation helpers
 │
-└── app.component.ts               # Root coordinator component
-```
-
-### Key Design Decisions
-
-#### 1. **Separation by Layer, Not by Feature**
-```
-core/        → Domain logic & infrastructure (reusable)
-features/    → Feature-specific UI components
-shared/      → Cross-cutting concerns
-```
-
-#### 2. **Repository Pattern**
-`UrlBuildRepositoryService` abstracts data storage:
-- In-memory state using signals
-- localStorage persistence
-- CRUD operations
-- Type-safe with validation
-
-#### 3. **Service Layer Pattern**
-Three types of services:
-- **Domain Services**: Pure business logic (`UrlBuilderService`)
-- **Application Services**: Orchestration (`FormStateManagerService`)
-- **Infrastructure Services**: External APIs (`ClipboardService`, `StorageService`)
-
-#### 4. **Component Composition**
-Components are small, focused, and composable:
-```typescript
-<app-url-preview
-  [urlData]="constructedUrl()"
-  (copyClicked)="onCopyUrl()"
-  (saveClicked)="onSaveBuild()">
-</app-url-preview>
+└── app.component.ts                      # Root orchestrator component
 ```
 
 ## 🎯 Advanced Patterns Used
 
 ### 1. Signals with Computed Values
 ```typescript
-readonly filterTerm = signal('');
-readonly filteredBuilds = computed(() => {
-  const term = this.filterTerm().toLowerCase();
-  return this.allBuilds().filter(build =>
-    build.finalUrl.includes(term)
-  );
-});
+readonly isDarkMode = signal<boolean>(false);
+readonly currentTheme = computed(() => this.isDarkMode() ? 'dark' : 'light');
 ```
 
-### 2. Typed Reactive Forms
+### 2. Zoneless Change Detection
 ```typescript
-FormGroup<{
-  baseUrl: FormControl<string | null>;
-  params: FormArray<FormGroup<{
-    key: FormControl<string | null>;
-    value: FormControl<string | null>;
-  }>>;
-}>
+provideZonelessChangeDetection() // No Zone.js dependency
 ```
 
-### 3. Validator Factories (Pure Functions)
+### 3. Signal-based Forms
+```typescript
+private readonly formValue = toSignal(
+  this.form.valueChanges.pipe(debounceTime(300)),
+  { initialValue: this.form.value }
+);
+```
+
+### 4. Pure Translate Pipe with Caching
+```typescript
+@Pipe({ pure: true }) // Optimized for performance
+private cache = new Map<string, Signal<string>>();
+```
+
+### 5. Type Guards for Runtime Safety
+```typescript
+export function isValidUrlBuild(data: unknown): data is UrlBuild {
+  return typeof data === 'object' && data !== null && 'baseUrl' in data;
+}
+```
+
+### 6. Validator Factories
 ```typescript
 export function absoluteUrlValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    // Validation logic
+    // Pure validation logic
   };
 }
 ```
 
-### 4. Type Guards
+### 7. Repository Pattern with Signals
 ```typescript
-export function isValidQueryParameter(param: unknown): param is QueryParameter {
-  return (
-    typeof param === 'object' &&
-    param !== null &&
-    'key' in param &&
-    'value' in param
-  );
+private readonly buildsSignal = signal<UrlBuild[]>([]);
+readonly builds$ = this.buildsSignal.asReadonly();
+```
+
+### 8. Provider Fallback Pattern
+```typescript
+async shortenUrl(url: string): Promise<string> {
+  for (const provider of this.providers) {
+    try {
+      return await provider.shorten(url);
+    } catch {
+      continue; // Try next provider
+    }
+  }
+  throw new Error('All providers failed');
 }
 ```
 
-## 🧪 Code Quality
+## 🧪 Testing
 
-- **TypeScript Strict Mode** - Full type safety
-- **No `any` types** - Explicit typing throughout
-- **Immutability** - Readonly properties in models
-- **Pure Functions** - No side effects in validators and utilities
-- **DRY** - No code duplication
-- **KISS** - Simple, understandable code
-- **SOLID** - All principles applied
+### Test Coverage
+- **606 unit tests** passing
+- **79 E2E tests** with Playwright
+- **78% code coverage**
+
+### Testing Strategy
+- **Unit tests**: Happy paths + critical edge cases
+- **E2E tests**: Full user flows with Page Object Pattern
+- **Integration tests**: Service interactions
+- **Accessibility tests**: WCAG compliance
+
+### Run Tests
+```bash
+# Unit tests
+npm test
+
+# E2E tests
+npx playwright test
+
+# E2E UI mode
+npx playwright test --ui
+
+# Coverage report
+npm test -- --coverage
+```
 
 ## 🔒 Security
 
-- URL validation prevents XSS
-- Input sanitization for parameter keys
-- No direct DOM manipulation
-- CSP-friendly (no inline scripts)
+- ✅ **Content Security Policy** (CSP) headers configured
+- ✅ **URL validation** prevents XSS attacks
+- ✅ **Input sanitization** for all user inputs
+- ✅ **No inline scripts** (CSP-friendly)
+- ✅ **HTTPS enforcement** in production
+- ✅ **Type-safe API calls** with error handling
 
-## ♿ Accessibility
+## ⚡ Performance Optimizations
 
-- ARIA labels and roles
-- Keyboard navigation (Enter, Space)
-- Screen reader support
-- Focus management
-- Semantic HTML
+- ✅ **Zoneless change detection** for faster rendering
+- ✅ **OnPush strategy** for all components
+- ✅ **Lazy loading** with @defer blocks
+- ✅ **Signal-based reactivity** (no unnecessary re-renders)
+- ✅ **Pure translate pipe** with computed caching (~80% faster)
+- ✅ **Form debouncing** (300ms) reduces rebuilds by 66%
+- ✅ **Font preloading** (~200-500ms faster initial load)
+- ✅ **toSignal()** pattern eliminates manual subscriptions
+- ✅ **Tree-shakable** standalone components
 
-## 📦 Bundle Size
-
+### Bundle Size
 ```
-Initial bundle:  ~69 KB (gzipped)
-Lazy chunk:      ~2 KB (history component)
+Development:  328 KB (raw)
+Production:   530 KB (raw) / 137 KB (gzipped)
 ```
 
-## 🚀 Future Enhancements
+## 🛠 Technology Stack
 
-- [ ] QR code generation for URLs
-- [ ] Export/import builds to JSON
-- [ ] URL shortening integration
-- [ ] More comprehensive unit tests
-- [ ] E2E tests with Playwright
-- [ ] i18n support
-- [ ] Dark mode theme
+| Category | Technology |
+|----------|-----------|
+| Framework | Angular 20.3.9 |
+| Language | TypeScript 5.7 (strict mode) |
+| State Management | Angular Signals |
+| Forms | Typed Reactive Forms |
+| Styling | SCSS with CSS variables |
+| UI Library | TaigaUI v4.60 (minimal usage) |
+| QR Generation | qrcode library |
+| HTTP Client | Angular HttpClient |
+| Testing | Jasmine + Karma + Playwright |
+| Build | Angular CLI + esbuild |
+
+## 📊 Key Metrics
+
+- **Lines of Code:** ~3,500 (excluding tests)
+- **Components:** 12 standalone components
+- **Services:** 15 domain/application services
+- **Models:** 8 TypeScript interfaces/types
+- **Tests:** 685 total (606 unit + 79 E2E)
+- **WCAG Compliance:** 95%+ (AA level)
+- **Bundle Size:** 137 KB gzipped
+- **Lighthouse Score:** 95+ (Performance, Accessibility, Best Practices)
+
+## 🔮 TODOs / Future Enhancements
+
+### High Priority
+- [ ] **Replace TaigaUI** with Angular Material or custom components (reduce bundle by 37%)
+- [ ] **Implement PWA** with Service Worker for offline support
+- [ ] **Add more unit test coverage** (target 90%+)
+- [ ] **Implement advanced QR customization** (logos, shapes, gradients)
+
+### Medium Priority
+- [ ] **Add URL analytics** (click tracking, QR scan counts)
+- [ ] **Bulk URL generation** (CSV import/export)
+- [ ] **Custom URL shortener** (self-hosted backend)
+- [ ] **URL templates** (save common patterns)
+- [ ] **Browser extension** for quick URL building
+
+### Low Priority
+- [ ] **More languages** (French, German, Japanese)
+- [ ] **Advanced theming** (custom color schemes)
+- [ ] **Collaboration features** (share builds with team)
+- [ ] **URL validation API** (check if URLs are live)
+- [ ] **QR batch download** (download all history as ZIP)
+
+## 📖 Documentation
+
+- **API Documentation:** JSDoc comments throughout codebase
+- **Architecture Docs:** See inline comments in services
+- **Testing Guide:** See `/e2e/README.md` for E2E setup
+- **Contributing Guide:** Follow SOLID principles and existing patterns
+
+## 🤝 Code Quality Standards
+
+- ✅ **TypeScript strict mode** enabled
+- ✅ **No `any` types** (except controlled cases with proper guards)
+- ✅ **ESLint** configuration with Angular rules
+- ✅ **Prettier** for consistent formatting
+- ✅ **Conventional commits** for clear history
+- ✅ **DRY** - No code duplication
+- ✅ **KISS** - Simple, readable code
+- ✅ **YAGNI** - No speculative features
+
+## 📝 Notes
+
+### Design Decisions
+
+1. **Standalone Components:** No NgModules for simpler architecture and better tree-shaking
+2. **Signals over RxJS:** Simpler reactivity for synchronous state
+3. **Service Layer Pattern:** Clear separation between domain, application, and infrastructure
+4. **Repository Pattern:** Abstract data access for testability
+5. **Pure Functions:** Validators and utilities as pure functions for predictability
+6. **Type Guards:** Runtime type safety for external data
+
+### Known Limitations
+
+- QR code generation is client-side only (no server-side rendering)
+- URL shortening requires external providers (no self-hosted option yet)
+- Maximum 10 builds in history (localStorage limitation)
+- No real-time collaboration features
+- Limited to 3 languages (scalable architecture for more)
+
+### Browser Support
+
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
+- Mobile browsers (iOS Safari, Chrome Android)
+
+## 🙏 Acknowledgments
+
+- **Angular Team** for excellent framework and docs
+- **TaigaUI** for accessible components
+- **Playwright** for reliable E2E testing
+- **QRCode library** for QR generation
+
+---
+
+**Built with ❤️ using Angular 20, TypeScript, and Clean Architecture principles.**

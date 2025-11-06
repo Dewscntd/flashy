@@ -1,94 +1,133 @@
-<app-toast-notification></app-toast-notification>
+<tui-root class="app-shell">
+  <app-toast-notification></app-toast-notification>
 
-<main class="container">
-  <div class="header">
-    <h1 class="main-title">URL Builder</h1>
-    <app-theme-toggle class="theme-toggle-wrapper"></app-theme-toggle>
-  </div>
+  <main id="main-content" class="container">
+    <!-- Skip to main content link for keyboard accessibility (WCAG 2.4.1) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-  <div class="builder-area">
-    <!-- URL Form Builder -->
-    <form [formGroup]="form" class="form-container" (ngSubmit)="$event.preventDefault()">
-
-      <!-- Base URL Field -->
-      <div class="form-group">
-        <label for="baseUrl">Base URL <span class="required">*</span></label>
-        <input
-          id="baseUrl"
-          type="url"
-          formControlName="baseUrl"
-          placeholder="https://example.com"
-          [attr.aria-invalid]="form.get('baseUrl')?.invalid && form.get('baseUrl')?.touched"
-          aria-describedby="baseUrl-error">
-        @if (form.get('baseUrl')?.invalid && form.get('baseUrl')?.touched) {
-          <small id="baseUrl-error" class="error" role="alert">
-            A valid absolute URL is required
-          </small>
-        }
+    <div class="header">
+      <div class="title-block">
+        <span class="eyebrow">{{ 'app.subtitle' | translate }}</span>
+        <h1 class="main-title">{{ 'app.title' | translate }}</h1>
       </div>
-
-      <!-- UTM Parameters -->
-      <fieldset class="utm-fieldset">
-        <legend>UTM Parameters (Optional)</legend>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="utmSource">utm_source</label>
-            <input
-              id="utmSource"
-              type="text"
-              formControlName="utmSource"
-              placeholder="e.g., google, newsletter">
+      <div class="header-controls">
+        @defer (on interaction) {
+          <app-language-switcher></app-language-switcher>
+        } @placeholder {
+          <div class="language-placeholder" role="button" aria-label="Language switcher loading">
+            <span class="language-code">{{ 'en' }}</span>
           </div>
+        }
+        <app-theme-toggle class="theme-toggle-wrapper"></app-theme-toggle>
+      </div>
+    </div>
 
-          <div class="form-group">
-            <label for="utmMedium">utm_medium</label>
-            <input
-              id="utmMedium"
-              type="text"
-              formControlName="utmMedium"
-              placeholder="e.g., cpc, email">
-          </div>
+    <div class="builder-area">
+      <!-- URL Form Builder -->
+      <form
+        [formGroup]="form"
+        class="form-card"
+        (ngSubmit)="$event.preventDefault()"
+        novalidate>
 
-          <div class="form-group">
-            <label for="utmCampaign">utm_campaign</label>
-            <input
-              id="utmCampaign"
-              type="text"
-              formControlName="utmCampaign"
-              placeholder="e.g., summer_sale">
-          </div>
+        <!-- Base URL Field -->
+        <div class="form-group">
+          <label for="baseUrl">{{ 'urlBuilder.form.baseUrl.label' | translate }} <span class="required">*</span></label>
+          <input
+            id="baseUrl"
+            type="url"
+            formControlName="baseUrl"
+            [placeholder]="'urlBuilder.form.baseUrl.placeholder' | translate"
+            [attr.aria-invalid]="form.get('baseUrl')?.invalid && form.get('baseUrl')?.touched"
+            aria-describedby="baseUrl-error">
+          <small id="baseUrl-error" class="error" role="alert">
+            @if (form.get('baseUrl')?.invalid && form.get('baseUrl')?.touched) {
+              {{ 'urlBuilder.form.baseUrl.error' | translate }}
+            }
+          </small>
         </div>
-      </fieldset>
 
-      <!-- Dynamic Parameters Component -->
-      <app-dynamic-params
-        [paramsArray]="params"
-        [onAdd]="onAddParameter.bind(this)"
-        [onRemove]="onRemoveParameter.bind(this)">
-      </app-dynamic-params>
-    </form>
+        <!-- UTM Parameters -->
+        <fieldset class="utm-fieldset">
+          <legend>{{ 'urlBuilder.form.utmParams.legend' | translate }}</legend>
 
-    <!-- Live URL Preview Component -->
-    <app-url-preview
-      [urlData]="constructedUrl()"
-      [saveDisabled]="!canSave()"
-      [shorteningInProgress]="shorteningInProgress()"
-      [shortenedUrl]="shortenedUrl()"
-      (copyClicked)="onCopyUrl()"
-      (saveClicked)="onSaveBuild()"
-      (shortenClicked)="onShortenUrl()">
-    </app-url-preview>
-  </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="utmSource">{{ 'urlBuilder.form.utmParams.source.label' | translate }}</label>
+              <input
+                id="utmSource"
+                type="text"
+                formControlName="utmSource"
+                [placeholder]="'urlBuilder.form.utmParams.source.placeholder' | translate">
+            </div>
 
-  <!-- History Component (Deferred Loading) -->
-  <div class="history-area">
-    @defer {
-      <app-history (loadBuild)="onLoadBuild($event)"></app-history>
-    } @placeholder {
-      <div class="placeholder-card">Loading History...</div>
-    } @error {
-      <div class="error-card">Failed to load history.</div>
-    }
-  </div>
-</main>
+            <div class="form-group">
+              <label for="utmMedium">{{ 'urlBuilder.form.utmParams.medium.label' | translate }}</label>
+              <input
+                id="utmMedium"
+                type="text"
+                formControlName="utmMedium"
+                [placeholder]="'urlBuilder.form.utmParams.medium.placeholder' | translate">
+            </div>
+
+            <div class="form-group">
+              <label for="utmCampaign">{{ 'urlBuilder.form.utmParams.campaign.label' | translate }}</label>
+              <input
+                id="utmCampaign"
+                type="text"
+                formControlName="utmCampaign"
+                [placeholder]="'urlBuilder.form.utmParams.campaign.placeholder' | translate">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Dynamic Parameters Component -->
+        <app-dynamic-params
+          [paramsArray]="params"
+          [onAdd]="onAddParameter.bind(this)"
+          [onRemove]="onRemoveParameter.bind(this)">
+        </app-dynamic-params>
+      </form>
+
+      <!-- Live URL Preview Component -->
+      <app-url-preview
+        [urlData]="constructedUrl()"
+        [saveDisabled]="!canSave()"
+        [shorteningInProgress]="shorteningInProgress()"
+        [shortenedUrl]="shortenedUrl()"
+        [qrCodeVisible]="qrCodeVisible()"
+        [qrCodeGenerating]="qrCodeGenerating()"
+        [qrCodeOptions]="qrCodeOptions()"
+        (copyClicked)="onCopyUrl()"
+        (saveClicked)="onSaveBuild()"
+        (shortenClicked)="onShortenUrl()"
+        (qrCodeRequested)="onGenerateQrCode()"
+        (qrCodeDownloadRequested)="onDownloadQrCode($event)"
+        (qrCodeCopyRequested)="onCopyQrCode()"
+        (qrCodeOptionsChanged)="onQrCodeOptionsChange($event)">
+      </app-url-preview>
+    </div>
+
+    <!-- History Component (Deferred Loading) -->
+    <div class="history-area">
+      @defer (on viewport; prefetch on idle) {
+        <app-history (loadBuild)="onLoadBuild($event)"></app-history>
+      } @placeholder (minimum 500ms) {
+        <div class="placeholder-card">
+          <span class="placeholder-icon">⌛</span>
+          {{ 'history.loading' | translate }}
+        </div>
+      } @loading (minimum 500ms; after 100ms) {
+        <div class="loading-card">
+          <div class="spinner"></div>
+          {{ 'common.labels.loading' | translate }}
+        </div>
+      } @error {
+        <div class="error-card">
+          <span class="placeholder-icon">⚠</span>
+          {{ 'history.error' | translate }}
+        </div>
+      }
+    </div>
+  </main>
+</tui-root>

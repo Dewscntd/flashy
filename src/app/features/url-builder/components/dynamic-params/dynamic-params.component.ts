@@ -4,18 +4,25 @@
  * Fully declarative and composable with reactive forms.
  */
 
-import { Component, input } from '@angular/core';
+import { Component, input, inject, ChangeDetectionStrategy } from '@angular/core';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { hasError } from '../../../../shared/utils/validation.utils';
+import { TuiButton } from '@taiga-ui/core/components/button';
+import { TranslatePipe } from '../../../../core/pipes/translate.pipe';
+import { TranslationService } from '../../../../core/services/translation.service';
 
 @Component({
   selector: 'app-dynamic-params',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, ReactiveFormsModule, TuiButton, TranslatePipe],
   templateUrl: './dynamic-params.component.html',
-  styleUrl: './dynamic-params.component.css'
+  styleUrl: './dynamic-params.component.scss'
 })
 export class DynamicParamsComponent {
+  private readonly translationService = inject(TranslationService);
+
   /**
    * The FormArray containing parameter form groups.
    */
@@ -55,13 +62,10 @@ export class DynamicParamsComponent {
   /**
    * Checks if a control at path has errors and is touched.
    */
-  hasError(group: FormGroup, controlName: string): boolean {
-    const control = group.get(controlName);
-    return !!(control?.invalid && control?.touched);
-  }
+  hasError = hasError;
 
   /**
-   * Gets error message for a control.
+   * Gets error message for a control with i18n support.
    */
   getErrorMessage(group: FormGroup, controlName: string): string {
     const control = group.get(controlName);
@@ -71,13 +75,13 @@ export class DynamicParamsComponent {
     }
 
     if (control.errors['required']) {
-      return `${controlName} is required`;
+      return this.translationService.instant('common.validation.required');
     }
 
     if (control.errors['invalidKey']) {
-      return control.errors['invalidKey'].message;
+      return this.translationService.instant('common.validation.invalidKey');
     }
 
-    return 'Invalid value';
+    return this.translationService.instant('common.validation.invalidUrl');
   }
 }

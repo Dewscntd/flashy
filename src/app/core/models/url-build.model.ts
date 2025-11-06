@@ -3,6 +3,8 @@
  * These models represent the ubiquitous language of the URL Builder domain.
  */
 
+import { QrCodePreferences } from './qr-code.model';
+
 /**
  * Represents a single query parameter key-value pair.
  * Enforces that both key and value must be present (no partial params).
@@ -36,7 +38,7 @@ export interface UrlBuildForm {
 
 /**
  * Persisted URL build entity with metadata.
- * Extends form data with identity and audit information.
+ * Extends form data with identity, audit information, and optional QR code data.
  */
 export interface UrlBuild {
   readonly id: string;
@@ -45,6 +47,8 @@ export interface UrlBuild {
   readonly createdAt: string;
   readonly shortenedUrl?: string;
   readonly shortenedBy?: string;
+  readonly qrCodeGenerated?: boolean;
+  readonly qrCodePreferences?: QrCodePreferences;
 }
 
 /**
@@ -57,18 +61,3 @@ export interface ConstructedUrl {
   readonly parameterCount: number;
 }
 
-/**
- * Type guard to check if an object is a valid QueryParameter
- */
-export function isValidQueryParameter(param: unknown): param is QueryParameter {
-  return (
-    typeof param === 'object' &&
-    param !== null &&
-    'key' in param &&
-    'value' in param &&
-    typeof (param as QueryParameter).key === 'string' &&
-    typeof (param as QueryParameter).value === 'string' &&
-    (param as QueryParameter).key.length > 0 &&
-    (param as QueryParameter).value.length > 0
-  );
-}

@@ -4,6 +4,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DynamicParamsComponent } from './dynamic-params.component';
 
@@ -20,7 +21,7 @@ describe('DynamicParamsComponent', () => {
     mockOnRemove = jasmine.createSpy('onRemove');
 
     await TestBed.configureTestingModule({
-      imports: [DynamicParamsComponent, ReactiveFormsModule]
+      imports: [DynamicParamsComponent, ReactiveFormsModule, HttpClientTestingModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DynamicParamsComponent);

@@ -1,0 +1,83 @@
+<div class="qr-code-container" [class.loading]="isLoading()">
+  @if (isLoading()) {
+    <!-- Loading skeleton -->
+    <div class="qr-code-skeleton" role="status" aria-label="Generating QR code">
+      <div class="spinner"></div>
+      <p>Generating QR code...</p>
+    </div>
+  } @else {
+    <!-- QR Code Display -->
+    <div class="qr-code-display">
+      <qrcode
+        [qrdata]="qrData()"
+        [width]="currentOptions().width"
+        [errorCorrectionLevel]="currentOptions().errorCorrectionLevel"
+        [margin]="currentOptions().margin"
+        [colorDark]="currentOptions().colorDark"
+        [colorLight]="currentOptions().colorLight"
+        [elementType]="currentOptions().renderType"
+        [cssClass]="currentOptions().cssClass || 'qr-code'"
+        [alt]="currentOptions().alt || 'QR Code'"
+        [ariaLabel]="currentOptions().ariaLabel || 'Scannable QR code'">
+      </qrcode>
+    </div>
+
+    @if (showControls()) {
+      <!-- Customization Controls -->
+      <div class="qr-code-controls">
+        <div class="control-group">
+          <label for="qr-size">Size</label>
+          <select
+            id="qr-size"
+            [value]="selectedSize()"
+            (change)="onSizeChange(+$any($event.target).value)"
+            class="form-select">
+            <option [value]="QrCodeSizePreset.SMALL">Small (128px)</option>
+            <option [value]="QrCodeSizePreset.MEDIUM">Medium (256px)</option>
+            <option [value]="QrCodeSizePreset.LARGE">Large (512px)</option>
+            <option [value]="QrCodeSizePreset.XLARGE">XLarge (1024px)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="qr-error-correction">Error Correction</label>
+          <select
+            id="qr-error-correction"
+            [value]="selectedErrorCorrection()"
+            (change)="onErrorCorrectionChange($any($event.target).value)"
+            class="form-select">
+            <option [value]="ErrorCorrectionLevel.L">Low (7%)</option>
+            <option [value]="ErrorCorrectionLevel.M">Medium (15%)</option>
+            <option [value]="ErrorCorrectionLevel.Q">Quartile (25%)</option>
+            <option [value]="ErrorCorrectionLevel.H">High (30%)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="qr-code-actions">
+        <button
+          type="button"
+          (click)="onDownload(QrCodeExportFormat.PNG)"
+          class="btn btn-secondary"
+          aria-label="Download as PNG">
+          Download PNG
+        </button>
+        <button
+          type="button"
+          (click)="onDownload(QrCodeExportFormat.SVG)"
+          class="btn btn-secondary"
+          aria-label="Download as SVG">
+          Download SVG
+        </button>
+        <button
+          type="button"
+          (click)="onCopy()"
+          class="btn btn-secondary"
+          aria-label="Copy to clipboard">
+          Copy to Clipboard
+        </button>
+      </div>
+    }
+  }
+</div>

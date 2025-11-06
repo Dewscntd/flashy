@@ -1,5 +1,5 @@
 <aside class="preview-container" role="region" aria-label="URL Preview">
-  <h2>Live Preview</h2>
+  <h2>{{ 'urlBuilder.preview.title' | translate }}</h2>
 
   @if (urlData(); as data) {
     <div class="preview-box">
@@ -7,17 +7,17 @@
 
       @if (shortenedUrl()) {
         <div class="shortened-url-section">
-          <strong class="shortened-label">Shortened URL:</strong>
+          <strong class="shortened-label">{{ 'urlBuilder.preview.shortenedLabel' | translate }}</strong>
           <p class="shortened-url-display" role="text" aria-label="Shortened URL">{{ shortenedUrl() }}</p>
         </div>
       }
 
       <div class="metadata">
         <span class="char-count" aria-label="Character count">
-          Characters: {{ data.characterCount }}
+          {{ 'urlBuilder.preview.metadata.characters' | translate:{ count: data.characterCount } }}
         </span>
         <span class="param-count" aria-label="Parameter count">
-          Parameters: {{ data.parameterCount }}
+          {{ 'urlBuilder.preview.metadata.parameters' | translate:{ count: data.parameterCount } }}
         </span>
       </div>
     </div>
@@ -26,35 +26,86 @@
       <button
         type="button"
         (click)="onCopy()"
-        class="btn btn-secondary"
+        tuiButton
+        appearance="flat"
+        size="l"
         aria-label="Copy URL to clipboard">
-        Copy URL
+        {{ 'urlBuilder.preview.actions.copy' | translate }}
       </button>
       <button
         type="button"
         (click)="onShorten()"
         [disabled]="shorteningInProgress()"
-        class="btn btn-secondary"
+        tuiButton
+        appearance="outline"
+        size="l"
         aria-label="Shorten URL">
         @if (shorteningInProgress()) {
           <span class="spinner"></span>
-          Shortening...
+          {{ 'urlBuilder.preview.actions.shortening' | translate }}
         } @else {
-          Shorten URL
+          {{ 'urlBuilder.preview.actions.shorten' | translate }}
+        }
+      </button>
+      <button
+        type="button"
+        (click)="onQrCodeGenerate()"
+        [disabled]="qrCodeGenerating()"
+        tuiButton
+        appearance="outline"
+        size="l"
+        aria-label="Generate QR Code">
+        @if (qrCodeGenerating()) {
+          <span class="spinner"></span>
+          {{ 'urlBuilder.preview.actions.generating' | translate }}
+        } @else {
+          @if (qrCodeVisible()) {
+            {{ 'urlBuilder.preview.actions.regenerateQr' | translate }}
+          } @else {
+            {{ 'urlBuilder.preview.actions.generateQr' | translate }}
+          }
         }
       </button>
       <button
         type="button"
         (click)="onSave()"
         [disabled]="saveDisabled()"
-        class="btn btn-primary"
+        tuiButton
+        appearance="primary"
+        size="l"
         aria-label="Save URL build">
-        Save Build
+        {{ 'urlBuilder.preview.actions.save' | translate }}
       </button>
     </div>
+
+    @if (qrCodeVisible() && qrCodeOptions()) {
+      <div class="qr-code-section">
+        <h3>{{ 'urlBuilder.qrCode.title' | translate }}</h3>
+        @defer (when qrCodeVisible()) {
+          <app-qr-code-preview
+            [qrData]="getQrCodeUrl()"
+            [options]="qrCodeOptions()!"
+            [isLoading]="qrCodeGenerating()"
+            [showControls]="true"
+            (downloadRequested)="onQrCodeDownload($event)"
+            (copyRequested)="onQrCodeCopy()"
+            (optionsChanged)="onQrCodeOptionsChange($event)">
+          </app-qr-code-preview>
+        } @loading (minimum 300ms) {
+          <div class="qr-code-loading" role="status">
+            <div class="spinner"></div>
+            <p>{{ 'urlBuilder.qrCode.generating' | translate }}</p>
+          </div>
+        } @placeholder {
+          <div class="qr-code-placeholder" role="status">
+            <p>{{ 'urlBuilder.qrCode.generating' | translate }}</p>
+          </div>
+        }
+      </div>
+    }
   } @else {
     <p class="placeholder" role="status">
-      Enter a valid Base URL to see the preview.
+      {{ 'urlBuilder.preview.placeholder' | translate }}
     </p>
   }
 </aside>

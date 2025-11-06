@@ -4,16 +4,18 @@
  * Fully declarative and composable.
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../core/services/notification.service';
+import { TuiButton } from '@taiga-ui/core/components/button';
 
 @Component({
   selector: 'app-toast-notification',
   standalone: true,
-  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, TuiButton],
   templateUrl: './toast-notification.component.html',
-  styleUrl: './toast-notification.component.css'
+  styleUrl: './toast-notification.component.scss'
 })
 export class ToastNotificationComponent {
   private readonly notificationService = inject(NotificationService);

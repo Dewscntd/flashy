@@ -11,16 +11,18 @@
  * ```
  */
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../../core/services/theme.service';
+import { TuiButton } from '@taiga-ui/core/components/button';
 
 @Component({
   selector: 'app-theme-toggle',
   standalone: true,
-  imports: [CommonModule],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, TuiButton],
   templateUrl: './theme-toggle.component.html',
-  styleUrl: './theme-toggle.component.css'
+  styleUrl: './theme-toggle.component.scss'
 })
 export class ThemeToggleComponent {
   private readonly themeService = inject(ThemeService);

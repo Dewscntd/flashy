@@ -4,6 +4,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { UrlPreviewComponent } from './url-preview.component';
 import { ConstructedUrl } from '../../../../core/models/url-build.model';
 
@@ -13,7 +14,7 @@ describe('UrlPreviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UrlPreviewComponent]
+      imports: [UrlPreviewComponent, HttpClientTestingModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(UrlPreviewComponent);

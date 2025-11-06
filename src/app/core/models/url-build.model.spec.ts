@@ -3,7 +3,8 @@
  * Tests the type guard function for QueryParameter validation
  */
 
-import { isValidQueryParameter, QueryParameter } from './url-build.model';
+import { QueryParameter } from './url-build.model';
+import { isValidQueryParameter } from '../../features/url-builder/url-builder.utils';
 
 describe('url-build.model', () => {
   describe('isValidQueryParameter', () => {

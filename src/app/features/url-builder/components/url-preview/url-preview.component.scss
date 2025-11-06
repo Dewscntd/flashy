@@ -1,0 +1,171 @@
+$surface-primary: var(--color-surface-primary);
+$surface-border: var(--color-surface-border);
+$text-primary: var(--color-text-primary);
+$text-secondary: var(--color-text-secondary);
+$text-tertiary: var(--color-text-tertiary);
+$brand: var(--color-brand-primary);
+
+.preview-container {
+  border-radius: clamp(18px, 3vw, 26px);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  padding: clamp(1.4rem, 3vw, 2.1rem);
+  background: linear-gradient(140deg, rgba(255, 255, 255, 0.85), rgba(240, 247, 255, 0.62));
+  transition: background var(--transition-normal), border-color var(--transition-normal);
+  min-height: clamp(220px, 32vh, 320px);
+  display: grid;
+  gap: clamp(1rem, 2.5vw, 1.6rem);
+
+  :host-context([data-theme="dark"]) & {
+    background: linear-gradient(140deg, rgba(15, 23, 42, 0.82), rgba(17, 24, 39, 0.68));
+    border-color: rgba(148, 163, 184, 0.35);
+  }
+
+  h2 {
+    margin: 0;
+    font: var(--tui-font-heading-5);
+    letter-spacing: -0.015em;
+    color: $text-primary;
+  }
+
+  .preview-box {
+    border-radius: 14px;
+    border: 1px solid $surface-border;
+    background: $surface-primary;
+    padding: clamp(1rem, 2.5vw, 1.4rem);
+    display: grid;
+    gap: 0.9rem;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.14), transparent 70%);
+      pointer-events: none;
+    }
+
+    .url-display {
+      margin: 0;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      color: $text-secondary;
+      word-break: break-word;
+    }
+
+    .metadata {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.4rem;
+      font: var(--tui-font-text-xs);
+      color: $text-tertiary;
+
+      span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+
+        &::before {
+          content: '';
+          inline-size: 8px;
+          block-size: 8px;
+          border-radius: 50%;
+          background: $brand;
+        }
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+
+    button[tuiButton] {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-inline-size: clamp(8rem, 20vw, 10.5rem);
+    }
+
+    .spinner {
+      inline-size: 16px;
+      block-size: 16px;
+      border: 3px solid rgba(255, 255, 255, 0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+    }
+  }
+
+  .placeholder {
+    color: color-mix(in srgb, $text-tertiary 75%, #fff 25%);
+    font-style: italic;
+    text-align: center;
+    padding: 2.25rem 1rem;
+  }
+
+  .shortened-url-section {
+    border-top: 1px solid $surface-border;
+    padding-top: 1rem;
+    display: grid;
+    gap: 0.5rem;
+
+    .shortened-label {
+      font: var(--tui-font-text-ui-s);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: $text-primary;
+    }
+
+    .shortened-url-display {
+      margin: 0;
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 0.95rem;
+      color: color-mix(in srgb, $brand 78%, #1f2937 22%);
+      word-break: break-word;
+    }
+  }
+
+  .qr-code-section {
+    border-top: 1px solid $surface-border;
+    padding-top: 1.5rem;
+    margin-top: 1rem;
+    display: grid;
+    gap: 1rem;
+
+    h3 {
+      margin: 0;
+      font: var(--tui-font-heading-6);
+      letter-spacing: -0.012em;
+      color: $text-primary;
+    }
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 640px) {
+  .preview-container {
+    padding: clamp(1.1rem, 6vw, 1.5rem);
+
+    .actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+
+      button[tuiButton] {
+        justify-content: center;
+        min-inline-size: unset;
+        width: 100%; // Full width on mobile
+        min-height: 48px; // WCAG 2.5.5 minimum touch target
+        padding: 0.875rem 1.5rem;
+      }
+    }
+  }
+}

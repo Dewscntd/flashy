@@ -1,12 +1,12 @@
 <div class="history-container" role="region" aria-label="Recent Builds History">
-  <h2>Recent Builds</h2>
+  <h2>{{ 'history.title' | translate }}</h2>
 
   <div class="filter-section">
-    <label for="history-filter" class="visually-hidden">Filter builds</label>
+    <label for="history-filter" class="visually-hidden">{{ 'history.filter.label' | translate }}</label>
     <input
       id="history-filter"
       type="text"
-      placeholder="Filter by URL, parameters..."
+      [placeholder]="'history.filter.placeholder' | translate"
       (input)="onFilterChange($event)"
       class="filter-input"
       aria-label="Filter history"
@@ -37,6 +37,9 @@
           <button
             type="button"
             class="delete-btn"
+            tuiButton
+            appearance="flat"
+            size="s"
             (click)="onDeleteBuild($event, build)"
             [attr.aria-label]="'Delete build from ' + (build.createdAt | date:'short')"
             title="Delete this build">
@@ -47,12 +50,12 @@
     </ul>
   } @else if (filterTerm()) {
     <div class="empty-state" role="status">
-      <p>No builds match your search.</p>
+      <p>{{ 'history.empty.noResults' | translate }}</p>
     </div>
   } @else {
     <div class="empty-state" role="status">
-      <p>No saved builds yet.</p>
-      <small>Save your first URL build to see it here!</small>
+      <p>{{ 'history.empty.noBuilds' | translate }}</p>
+      <small>{{ 'history.empty.noBuildsHint' | translate }}</small>
     </div>
   }
 </div>

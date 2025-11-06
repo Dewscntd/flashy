@@ -1,9 +1,12 @@
 /**
  * Service for managing user notifications (toast messages).
  * Follows Single Responsibility Principle: manages notifications only.
+ * Now supports i18n with translation keys.
  */
 
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
+import { TranslationService } from './translation.service';
+import { TranslationParams } from '../models/i18n.model';
 
 export type NotificationType = 'success' | 'error' | 'warning' | 'info';
 
@@ -22,6 +25,7 @@ export interface Notification {
   providedIn: 'root'
 })
 export class NotificationService {
+  private readonly translationService = inject(TranslationService);
   private readonly notifications = signal<ReadonlyArray<Notification>>([]);
   private readonly defaultDuration = 3000; // 3 seconds
 
@@ -32,42 +36,50 @@ export class NotificationService {
   readonly notifications$ = this.notifications.asReadonly();
 
   /**
-   * Shows a success notification.
+   * Shows a success notification with i18n support.
    *
-   * @param message - Message to display
+   * @param key - Translation key or plain message
+   * @param params - Optional translation parameters
    * @param duration - Optional duration in milliseconds (default: 3000)
    */
-  success(message: string, duration?: number): void {
+  success(key: string, params?: TranslationParams, duration?: number): void {
+    const message = this.translationService.instant(key, params);
     this.addNotification(message, 'success', duration);
   }
 
   /**
-   * Shows an error notification.
+   * Shows an error notification with i18n support.
    *
-   * @param message - Error message to display
+   * @param key - Translation key or plain message
+   * @param params - Optional translation parameters
    * @param duration - Optional duration in milliseconds (default: 3000)
    */
-  error(message: string, duration?: number): void {
+  error(key: string, params?: TranslationParams, duration?: number): void {
+    const message = this.translationService.instant(key, params);
     this.addNotification(message, 'error', duration);
   }
 
   /**
-   * Shows a warning notification.
+   * Shows a warning notification with i18n support.
    *
-   * @param message - Warning message to display
+   * @param key - Translation key or plain message
+   * @param params - Optional translation parameters
    * @param duration - Optional duration in milliseconds (default: 3000)
    */
-  warning(message: string, duration?: number): void {
+  warning(key: string, params?: TranslationParams, duration?: number): void {
+    const message = this.translationService.instant(key, params);
     this.addNotification(message, 'warning', duration);
   }
 
   /**
-   * Shows an info notification.
+   * Shows an info notification with i18n support.
    *
-   * @param message - Info message to display
+   * @param key - Translation key or plain message
+   * @param params - Optional translation parameters
    * @param duration - Optional duration in milliseconds (default: 3000)
    */
-  info(message: string, duration?: number): void {
+  info(key: string, params?: TranslationParams, duration?: number): void {
+    const message = this.translationService.instant(key, params);
     this.addNotification(message, 'info', duration);
   }
 

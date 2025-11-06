@@ -1,0 +1,127 @@
+.language-switcher {
+  position: relative;
+}
+
+.language-toggle-button {
+  // WCAG 2.1 AA: Touch target must be at least 44x44px
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+
+  // WCAG 2.4.7: Visible focus indicator for keyboard navigation
+  &:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 4px;
+    box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.3);
+
+    :host-context([data-theme="dark"]) & {
+      outline-color: rgba(129, 140, 248, 0.95);
+      box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.4);
+    }
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+.language-code {
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 0.5rem;
+  background: var(--color-surface-primary, #fff);
+  border: 1px solid var(--color-surface-border, #e5e7eb);
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.language-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 44px; // WCAG 2.1 AA: Touch target minimum
+  padding: 0.75rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s;
+  text-align: left;
+
+  &:hover {
+    background: var(--color-surface-secondary, #f9fafb);
+  }
+
+  &.active {
+    background: var(--color-brand-primary, #007bff);
+    color: #fff;
+
+    .locale-name {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  // Keyboard navigation focused state
+  &.focused {
+    background: var(--color-surface-hover, #edf2f7);
+    outline: 2px solid var(--color-input-border-focus);
+    outline-offset: 2px;
+
+    &.active {
+      background: var(--color-brand-primary, #007bff);
+      outline-color: rgba(255, 255, 255, 0.9);
+    }
+  }
+
+  // WCAG 2.4.7: Visible focus indicator for keyboard navigation
+  &:focus-visible {
+    outline: 2px solid var(--color-input-border-focus);
+    outline-offset: 2px;
+    background: var(--color-surface-hover, #edf2f7);
+
+    &.active {
+      background: var(--color-brand-primary, #007bff);
+      outline-color: rgba(255, 255, 255, 0.9);
+    }
+  }
+
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+}
+
+.locale-native {
+  font-weight: 600;
+}
+
+.locale-name {
+  color: var(--color-text-tertiary, #9ca3af);
+  font-size: 0.875rem;
+}
+
+// Dark mode support
+:host-context([data-theme="dark"]) {
+  .language-dropdown {
+    background: var(--color-surface-primary, #1f2937);
+    border-color: var(--color-surface-border, #374151);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .language-option:hover {
+    background: var(--color-surface-secondary, #374151);
+  }
+}
