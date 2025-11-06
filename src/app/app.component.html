@@ -108,41 +108,40 @@
       </app-url-preview>
     </div>
 
+    <!-- History Component (Deferred Loading) -->
+    <aside role="complementary" class="history-area" aria-label="URL Build History">
+      @defer (on viewport; prefetch on idle) {
+        <app-history (loadBuild)="onLoadBuild($event)"></app-history>
+      } @placeholder (minimum 500ms) {
+        <div class="history-skeleton-card" role="status" aria-label="Loading history">
+          <div class="skeleton-header">
+            <div class="skeleton-title"></div>
+          </div>
+          <div class="skeleton-search"></div>
+          <div class="skeleton-list">
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+          </div>
+        </div>
+      } @loading (minimum 500ms; after 100ms) {
+        <div class="history-skeleton-card" role="status" aria-label="Loading history">
+          <div class="skeleton-header">
+            <div class="skeleton-title"></div>
+          </div>
+          <div class="skeleton-search"></div>
+          <div class="skeleton-list">
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+            <div class="skeleton-item"></div>
+          </div>
+        </div>
+      } @error {
+        <div class="error-card">
+          <span class="placeholder-icon">⚠</span>
+          {{ 'history.error' | translate }}
+        </div>
+      }
+    </aside>
   </main>
-
-  <!-- History Component (Deferred Loading) -->
-  <aside role="complementary" class="history-area" aria-label="URL Build History">
-    @defer (on viewport; prefetch on idle) {
-      <app-history (loadBuild)="onLoadBuild($event)"></app-history>
-    } @placeholder (minimum 500ms) {
-      <div class="history-skeleton-card" role="status" aria-label="Loading history">
-        <div class="skeleton-header">
-          <div class="skeleton-title"></div>
-        </div>
-        <div class="skeleton-search"></div>
-        <div class="skeleton-list">
-          <div class="skeleton-item"></div>
-          <div class="skeleton-item"></div>
-          <div class="skeleton-item"></div>
-        </div>
-      </div>
-    } @loading (minimum 500ms; after 100ms) {
-      <div class="history-skeleton-card" role="status" aria-label="Loading history">
-        <div class="skeleton-header">
-          <div class="skeleton-title"></div>
-        </div>
-        <div class="skeleton-search"></div>
-        <div class="skeleton-list">
-          <div class="skeleton-item"></div>
-          <div class="skeleton-item"></div>
-          <div class="skeleton-item"></div>
-        </div>
-      </div>
-    } @error {
-      <div class="error-card">
-        <span class="placeholder-icon">⚠</span>
-        {{ 'history.error' | translate }}
-      </div>
-    }
-  </aside>
 </tui-root>

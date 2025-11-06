@@ -115,12 +115,17 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
 }
 
 .main-content {
-  max-width: clamp(1040px, 80vw, 1440px);
+  max-width: clamp(900px, 90vw, 1440px);
   margin-inline: auto;
   display: grid;
-  grid-template-columns: minmax(0, 2.05fr) minmax(320px, 0.95fr);
+  grid-template-columns: minmax(0, 2fr) minmax(280px, 1fr);
   gap: clamp(1.75rem, 4vw, 2.75rem);
   align-items: start;
+
+  // Ensure child elements respect grid constraints
+  > * {
+    min-width: 0; // Prevent overflow in grid cells
+  }
 }
 
 .header {
@@ -398,16 +403,29 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
   }
 }
 
-// Tablet landscape: Keep side-by-side layout with adjusted proportions
-@media (max-width: 1200px) and (min-width: 769px) {
+// Large tablet/small desktop (900px-1199px)
+@media (max-width: 1199px) and (min-width: 900px) {
   .main-content {
-    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    grid-template-columns: minmax(0, 1.5fr) minmax(260px, 1fr);
     gap: clamp(1.5rem, 3vw, 2rem);
   }
 
   .history-area {
-    position: sticky; // Keep sticky on tablet
+    position: sticky;
     top: clamp(1.5rem, 3vw, 2rem);
+  }
+}
+
+// Standard tablet (769px-899px)
+@media (max-width: 899px) and (min-width: 769px) {
+  .main-content {
+    grid-template-columns: minmax(0, 1.3fr) minmax(240px, 0.7fr);
+    gap: clamp(1.25rem, 3vw, 1.75rem);
+  }
+
+  .history-area {
+    position: sticky;
+    top: clamp(1.25rem, 3vw, 1.75rem);
   }
 }
 
