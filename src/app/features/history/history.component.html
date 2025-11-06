@@ -50,12 +50,19 @@
     </ul>
   } @else if (filterTerm()) {
     <div class="empty-state" role="status">
-      <p>{{ 'history.empty.noResults' | translate }}</p>
+      <div class="empty-icon" aria-hidden="true">🔍</div>
+      <h3 class="empty-title">{{ 'history.empty.noResults' | translate }}</h3>
+      <p class="empty-hint">Try adjusting your search terms</p>
     </div>
   } @else {
     <div class="empty-state" role="status">
-      <p>{{ 'history.empty.noBuilds' | translate }}</p>
-      <small>{{ 'history.empty.noBuildsHint' | translate }}</small>
+      <div class="empty-icon" aria-hidden="true">🔗</div>
+      <h3 class="empty-title">{{ 'history.empty.noBuilds' | translate }}</h3>
+      <p class="empty-description">{{ 'history.empty.noBuildsHint' | translate }}</p>
+      <p class="empty-tip">
+        <span class="tip-icon" aria-hidden="true">💡</span>
+        <span>Tip: Use the "Save Build" button after creating a URL</span>
+      </p>
     </div>
   }
 </div>

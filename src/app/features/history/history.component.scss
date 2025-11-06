@@ -171,19 +171,56 @@ $danger-hover: var(--color-button-danger-hover);
   .empty-state {
     text-align: center;
     padding: clamp(2.4rem, 4vw, 3rem) 1.5rem;
-    color: $text-muted;
     display: grid;
-    gap: 0.75rem;
+    gap: 1rem;
+    place-items: center;
 
-    p {
+    .empty-icon {
+      font-size: 3rem;
+      line-height: 1;
+      opacity: 0.6;
+      margin-bottom: 0.5rem;
+      filter: grayscale(0.3);
+    }
+
+    .empty-title {
       margin: 0;
-      font-size: 1.05rem;
+      font-size: 1.1rem;
       font-weight: 600;
       color: $text-secondary;
     }
 
-    small {
+    .empty-description,
+    .empty-hint {
+      margin: 0;
+      font-size: 0.95rem;
       color: $text-muted;
+      max-width: 320px;
+    }
+
+    .empty-tip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin: 0.5rem 0 0;
+      padding: 0.75rem 1rem;
+      background: rgba(102, 126, 234, 0.08);
+      border-radius: 8px;
+      font-size: 0.875rem;
+      color: $text-secondary;
+      max-width: 380px;
+      border: 1px solid rgba(102, 126, 234, 0.15);
+
+      :host-context([data-theme="dark"]) & {
+        background: rgba(99, 102, 241, 0.12);
+        border-color: rgba(99, 102, 241, 0.2);
+      }
+
+      .tip-icon {
+        font-size: 1.25rem;
+        line-height: 1;
+        flex-shrink: 0;
+      }
     }
   }
 

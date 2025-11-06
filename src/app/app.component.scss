@@ -114,7 +114,7 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
   }
 }
 
-.container {
+.main-content {
   max-width: clamp(1040px, 80vw, 1440px);
   margin-inline: auto;
   display: grid;
@@ -165,7 +165,11 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
       font-weight: 700;
       color: var(--color-text-inverse);
       letter-spacing: -0.025em;
-      text-shadow: 0 18px 42px rgba(15, 23, 42, 0.55);
+      // Enhanced text-shadow for better contrast on gradient (WCAG 2.1 AA compliance)
+      text-shadow:
+        0 2px 4px rgba(15, 23, 42, 0.4),
+        0 4px 12px rgba(15, 23, 42, 0.3),
+        0 8px 24px rgba(15, 23, 42, 0.2);
     }
   }
 
@@ -316,9 +320,87 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
   font-size: 1.75rem;
 }
 
+// History skeleton loader styles
+.history-skeleton-card {
+  display: grid;
+  gap: 1.25rem;
+  @include card(clamp(1.4rem, 3vw, 2rem));
+
+  .skeleton-header {
+    .skeleton-title {
+      height: 2rem;
+      width: 60%;
+      background: linear-gradient(
+        90deg,
+        rgba(148, 163, 184, 0.1) 0%,
+        rgba(148, 163, 184, 0.2) 50%,
+        rgba(148, 163, 184, 0.1) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+  }
+
+  .skeleton-search {
+    height: 2.5rem;
+    background: linear-gradient(
+      90deg,
+      rgba(148, 163, 184, 0.1) 0%,
+      rgba(148, 163, 184, 0.2) 50%,
+      rgba(148, 163, 184, 0.1) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 12px;
+  }
+
+  .skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+
+    .skeleton-item {
+      height: 4rem;
+      background: linear-gradient(
+        90deg,
+        rgba(148, 163, 184, 0.08) 0%,
+        rgba(148, 163, 184, 0.15) 50%,
+        rgba(148, 163, 184, 0.08) 100%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 12px;
+
+      // Stagger animation for visual appeal
+      &:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+    }
+  }
+
+  :host-context([data-theme="dark"]) & {
+    .skeleton-title,
+    .skeleton-search,
+    .skeleton-item {
+      background: linear-gradient(
+        90deg,
+        rgba(148, 163, 184, 0.12) 0%,
+        rgba(148, 163, 184, 0.22) 50%,
+        rgba(148, 163, 184, 0.12) 100%
+      );
+      background-size: 200% 100%;
+    }
+  }
+}
+
 // Tablet landscape: Keep side-by-side layout with adjusted proportions
 @media (max-width: 1200px) and (min-width: 769px) {
-  .container {
+  .main-content {
     grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
     gap: clamp(1.5rem, 3vw, 2rem);
   }
@@ -331,7 +413,7 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
 
 // Mobile portrait: Switch to single column
 @media (max-width: 768px) {
-  .container {
+  .main-content {
     grid-template-columns: minmax(0, 1fr);
   }
 
@@ -346,7 +428,7 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
     padding-block: clamp(1.25rem, 8vw, 2.75rem);
   }
 
-  .container {
+  .main-content {
     gap: clamp(1.35rem, 6vw, 2rem);
   }
 
@@ -409,5 +491,14 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
 @keyframes spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }

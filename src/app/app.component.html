@@ -1,11 +1,10 @@
 <tui-root class="app-shell">
   <app-toast-notification></app-toast-notification>
 
-  <main id="main-content" class="container">
-    <!-- Skip to main content link for keyboard accessibility (WCAG 2.4.1) -->
-    <a href="#main-content" class="skip-link">Skip to main content</a>
+  <!-- Skip to main content link for keyboard accessibility (WCAG 2.4.1) -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <div class="header">
+  <header role="banner" class="header">
       <div class="title-block">
         <span class="eyebrow">{{ 'app.subtitle' | translate }}</span>
         <h1 class="main-title">{{ 'app.title' | translate }}</h1>
@@ -20,8 +19,9 @@
         }
         <app-theme-toggle class="theme-toggle-wrapper"></app-theme-toggle>
       </div>
-    </div>
+    </header>
 
+  <main role="main" id="main-content" class="main-content">
     <div class="builder-area">
       <!-- URL Form Builder -->
       <form
@@ -108,26 +108,41 @@
       </app-url-preview>
     </div>
 
-    <!-- History Component (Deferred Loading) -->
-    <div class="history-area">
-      @defer (on viewport; prefetch on idle) {
-        <app-history (loadBuild)="onLoadBuild($event)"></app-history>
-      } @placeholder (minimum 500ms) {
-        <div class="placeholder-card">
-          <span class="placeholder-icon">⌛</span>
-          {{ 'history.loading' | translate }}
-        </div>
-      } @loading (minimum 500ms; after 100ms) {
-        <div class="loading-card">
-          <div class="spinner"></div>
-          {{ 'common.labels.loading' | translate }}
-        </div>
-      } @error {
-        <div class="error-card">
-          <span class="placeholder-icon">⚠</span>
-          {{ 'history.error' | translate }}
-        </div>
-      }
-    </div>
   </main>
+
+  <!-- History Component (Deferred Loading) -->
+  <aside role="complementary" class="history-area" aria-label="URL Build History">
+    @defer (on viewport; prefetch on idle) {
+      <app-history (loadBuild)="onLoadBuild($event)"></app-history>
+    } @placeholder (minimum 500ms) {
+      <div class="history-skeleton-card" role="status" aria-label="Loading history">
+        <div class="skeleton-header">
+          <div class="skeleton-title"></div>
+        </div>
+        <div class="skeleton-search"></div>
+        <div class="skeleton-list">
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+        </div>
+      </div>
+    } @loading (minimum 500ms; after 100ms) {
+      <div class="history-skeleton-card" role="status" aria-label="Loading history">
+        <div class="skeleton-header">
+          <div class="skeleton-title"></div>
+        </div>
+        <div class="skeleton-search"></div>
+        <div class="skeleton-list">
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+          <div class="skeleton-item"></div>
+        </div>
+      </div>
+    } @error {
+      <div class="error-card">
+        <span class="placeholder-icon">⚠</span>
+        {{ 'history.error' | translate }}
+      </div>
+    }
+  </aside>
 </tui-root>
