@@ -1,22 +1,35 @@
-<aside class="preview-container" role="region" aria-label="URL Preview">
+<aside
+  class="preview-container"
+  role="region"
+  [attr.aria-label]="'urlBuilder.preview.aria.region' | translate">
   <h2>{{ 'urlBuilder.preview.title' | translate }}</h2>
 
   @if (urlData(); as data) {
     <div class="preview-box">
-      <p class="url-display" role="text" aria-label="Generated URL">{{ data.url }}</p>
+      <p
+        class="url-display"
+        role="text"
+        [attr.aria-label]="'urlBuilder.preview.aria.generatedUrl' | translate">
+        {{ data.url }}
+      </p>
 
       @if (shortenedUrl()) {
         <div class="shortened-url-section">
           <strong class="shortened-label">{{ 'urlBuilder.preview.shortenedLabel' | translate }}</strong>
-          <p class="shortened-url-display" role="text" aria-label="Shortened URL">{{ shortenedUrl() }}</p>
+          <p
+            class="shortened-url-display"
+            role="text"
+            [attr.aria-label]="'urlBuilder.preview.aria.shortenedUrl' | translate">
+            {{ shortenedUrl() }}
+          </p>
         </div>
       }
 
       <div class="metadata">
-        <span class="char-count" aria-label="Character count">
+        <span class="char-count" [attr.aria-label]="'urlBuilder.preview.aria.characterCount' | translate">
           {{ 'urlBuilder.preview.metadata.characters' | translate:{ count: data.characterCount } }}
         </span>
-        <span class="param-count" aria-label="Parameter count">
+        <span class="param-count" [attr.aria-label]="'urlBuilder.preview.aria.parameterCount' | translate">
           {{ 'urlBuilder.preview.metadata.parameters' | translate:{ count: data.parameterCount } }}
         </span>
       </div>
@@ -29,7 +42,7 @@
         tuiButton
         appearance="flat"
         size="l"
-        aria-label="Copy URL to clipboard">
+        [attr.aria-label]="'urlBuilder.preview.aria.copy' | translate">
         {{ 'urlBuilder.preview.actions.copy' | translate }}
       </button>
       <button
@@ -39,7 +52,7 @@
         tuiButton
         appearance="outline"
         size="l"
-        aria-label="Shorten URL">
+        [attr.aria-label]="'urlBuilder.preview.aria.shorten' | translate">
         @if (shorteningInProgress()) {
           <span class="spinner"></span>
           {{ 'urlBuilder.preview.actions.shortening' | translate }}
@@ -54,7 +67,7 @@
         tuiButton
         appearance="outline"
         size="l"
-        aria-label="Generate QR Code">
+        [attr.aria-label]="'urlBuilder.preview.aria.qr' | translate">
         @if (qrCodeGenerating()) {
           <span class="spinner"></span>
           {{ 'urlBuilder.preview.actions.generating' | translate }}
@@ -73,7 +86,7 @@
         tuiButton
         appearance="primary"
         size="l"
-        aria-label="Save URL build">
+        [attr.aria-label]="'urlBuilder.preview.aria.save' | translate">
         {{ 'urlBuilder.preview.actions.save' | translate }}
       </button>
     </div>

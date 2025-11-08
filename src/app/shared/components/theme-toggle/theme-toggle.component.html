@@ -1,13 +1,10 @@
 <button
   class="theme-toggle"
   type="button"
-  tuiButton
-  appearance="flat"
-  size="s"
   (click)="onToggleTheme()"
-  [attr.aria-label]="ariaLabel"
+  [attr.aria-label]="ariaLabel()"
   [attr.aria-pressed]="isDarkMode()"
-  title="{{ ariaLabel }}">
+  [title]="ariaLabel()">
   <svg
     class="theme-icon"
     [class.theme-icon--sun]="!isDarkMode()"

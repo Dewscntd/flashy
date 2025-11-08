@@ -9,12 +9,13 @@ import { CommonModule } from '@angular/common';
 import { TranslationService } from '../../../core/services/translation.service';
 import { Locale } from '../../../core/models/i18n.model';
 import { TuiButton } from '@taiga-ui/core/components/button';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-language-switcher',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TuiButton],
+  imports: [CommonModule, TuiButton, TranslatePipe],
   templateUrl: './language-switcher.component.html',
   styleUrl: './language-switcher.component.scss'
 })

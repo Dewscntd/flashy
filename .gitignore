@@ -78,3 +78,30 @@ e2e/bug-verification*.spec.ts
 e2e/ui-bug-analysis.spec.ts
 e2e/design-qa-comprehensive.spec.ts
 e2e/accessibility-wcag.spec.ts
+
+# Documentation artifacts
+ARCHITECTURAL_REVIEW.md
+ARCHITECTURE_DIAGRAM.md
+DESIGN_CHANGES_QUICK_REFERENCE.md
+DESIGN_IMPROVEMENTS_SUMMARY.md
+DESIGN_REVIEW_REPORT.md
+I18N_FIX_ANALYSIS.md
+REVIEW_EXECUTIVE_SUMMARY.md
+UI_BUG_FIXES_COMPLETE.md
+UI_BUG_FIXES_SUMMARY.md
+review-report.txt
+screenshots/
+playwright-review.ts
+
+# Debug E2E tests
+e2e/design-review-screenshots/
+e2e/design-review.spec.ts
+e2e/language-switch-debug.spec.ts
+e2e/language-switcher-visibility.spec.ts
+e2e/language-switcher.spec.ts-snapshots/
+e2e/responsive/
+e2e/ui-bug-fixes.spec.ts
+e2e/ui-bug-fixes.spec.ts-snapshots/
+e2e/ui-bug-verification.spec.ts
+e2e/url-input-https-handling.spec.ts
+e2e/visual-verification.spec.ts

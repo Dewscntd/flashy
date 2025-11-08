@@ -14,7 +14,9 @@ import { TranslationParams } from '../models/i18n.model';
 @Pipe({
   name: 'translate',
   standalone: true,
-  pure: true // Pure pipe for optimal performance with signal-based caching
+  // Mark as impure so Angular re-evaluates when the underlying translation signal changes.
+  // The internal computed still ensures we only recompute when locale or params change.
+  pure: false
 })
 export class TranslatePipe implements PipeTransform {
   private readonly translationService = inject(TranslationService);
@@ -32,8 +34,13 @@ export class TranslatePipe implements PipeTransform {
     if (!translationSignal) {
       // Create a new computed signal that reacts to locale changes
       translationSignal = computed(() => {
-        // This computed will re-run when the locale signal changes
-        // (which happens inside translationService.instant via getTranslation -> translations())
+        // REACTIVE CHAIN: This computed establishes dependencies on:
+        // 1. version$() - increments when translations are loaded (CRITICAL for zoneless CD)
+        // 2. currentLocale() signal - read in getTranslation()
+        // 3. translations() signal - read in getTranslation()
+        // When setLocale() is called, all signals update, triggering re-computation
+        // The version signal is essential to force change detection in zoneless mode
+        this.translationService.version$();
         return this.translationService.instant(key, params);
       });
 

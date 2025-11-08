@@ -1,10 +1,13 @@
-<div class="language-switcher">
+<div class="language-switcher" [class.is-open]="isOpen()">
   <button
     class="language-toggle-button"
     tuiButton
     appearance="flat"
     size="s"
-    [attr.aria-label]="'Change language. Current: ' + currentLocaleName()"
+    [attr.aria-label]="
+      'language.switcher.aria.toggle' |
+        translate:{ language: currentLocaleName() }
+    "
     [attr.aria-expanded]="isOpen()"
     [attr.aria-haspopup]="'menu'"
     (click)="toggleDropdown()"
@@ -23,7 +26,10 @@
           role="menuitem"
           [tabindex]="isOptionFocused(idx) ? 0 : -1"
           (click)="selectLocale(locale.code)"
-          [attr.aria-label]="'Switch to ' + locale.nativeName">
+          [attr.aria-label]="
+            'language.switcher.aria.option' |
+              translate:{ language: locale.nativeName }
+          ">
           <span class="locale-native">{{ locale.nativeName }}</span>
           <span class="locale-name">({{ locale.name }})</span>
         </button>

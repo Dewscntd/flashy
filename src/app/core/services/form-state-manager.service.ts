@@ -64,13 +64,39 @@ export class FormStateManagerService {
   /**
    * Computed signal for the constructed URL.
    * Automatically recalculates when form values change via formValue signal.
+   * Automatically prepends https:// if user didn't include a protocol.
+   *
+   * Edge Cases Handled:
+   * - "google.com" → "https://google.com"
+   * - "http://google.com" → "https://google.com" (replaces http with https)
+   * - "https://google.com" → "https://google.com" (no duplicate)
+   * - "" → undefined (empty string)
+   * - "localhost:4200" → "https://localhost:4200"
    */
   readonly constructedUrl = computed<ConstructedUrl | null>(() => {
     // formValue signal automatically tracks form changes
     const currentValue = this.formValue();
 
+    // Normalize baseUrl to always use https://
+    let baseUrl = currentValue.baseUrl ?? undefined;
+    if (baseUrl) {
+      // Trim whitespace
+      baseUrl = baseUrl.trim();
+
+      // If empty after trim, set to undefined
+      if (baseUrl.length === 0) {
+        baseUrl = undefined;
+      } else {
+        // Remove any existing protocol (http:// or https://)
+        baseUrl = baseUrl.replace(/^https?:\/\//i, '');
+
+        // Always prepend https://
+        baseUrl = `https://${baseUrl}`;
+      }
+    }
+
     const formData: Partial<UrlBuildForm> = {
-      baseUrl: currentValue.baseUrl ?? undefined,
+      baseUrl,
       utmSource: currentValue.utmSource ?? undefined,
       utmMedium: currentValue.utmMedium ?? undefined,
       utmCampaign: currentValue.utmCampaign ?? undefined,

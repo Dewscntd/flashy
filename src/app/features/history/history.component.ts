@@ -12,6 +12,7 @@ import { matchesBuild } from './history.utils';
 import { TuiButton } from '@taiga-ui/core/components/button';
 import { TuiDialogService } from '@taiga-ui/core';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
+import { TranslationService } from '../../core/services/translation.service';
 
 @Component({
   selector: 'app-history',
@@ -24,6 +25,7 @@ import { TranslatePipe } from '../../core/pipes/translate.pipe';
 export class HistoryComponent {
   private readonly repository = inject(UrlBuildRepositoryService);
   private readonly dialogs = inject(TuiDialogService);
+  private readonly translation = inject(TranslationService);
 
   /**
    * Emits when user wants to load a build into the form.
@@ -80,13 +82,16 @@ export class HistoryComponent {
 
     // Show confirmation dialog using TaigaUI
     const confirmation = this.dialogs.open<boolean>(
-      'Are you sure you want to delete this URL build? This action cannot be undone.',
+      this.translation.instant('history.dialog.deleteMessage'),
       {
-        label: 'Confirm Deletion',
+        label: this.translation.instant('history.dialog.deleteTitle'),
         size: 's',
         dismissible: true,
         data: {
-          buttons: ['Cancel', 'Delete']
+          buttons: [
+            this.translation.instant('history.dialog.deleteCancel'),
+            this.translation.instant('history.dialog.deleteConfirm')
+          ]
         }
       }
     );

@@ -1,9 +1,12 @@
 <div class="qr-code-container" [class.loading]="isLoading()">
   @if (isLoading()) {
     <!-- Loading skeleton -->
-    <div class="qr-code-skeleton" role="status" aria-label="Generating QR code">
+    <div
+      class="qr-code-skeleton"
+      role="status"
+      [attr.aria-label]="'urlBuilder.qrCode.generating' | translate">
       <div class="spinner"></div>
-      <p>Generating QR code...</p>
+      <p>{{ 'urlBuilder.qrCode.generating' | translate }}</p>
     </div>
   } @else {
     <!-- QR Code Display -->
@@ -17,8 +20,12 @@
         [colorLight]="currentOptions().colorLight"
         [elementType]="currentOptions().renderType"
         [cssClass]="currentOptions().cssClass || 'qr-code'"
-        [alt]="currentOptions().alt || 'QR Code'"
-        [ariaLabel]="currentOptions().ariaLabel || 'Scannable QR code'">
+        [alt]="
+          currentOptions().alt || ('urlBuilder.qrCode.aria.alt' | translate)
+        "
+        [ariaLabel]="
+          currentOptions().ariaLabel || ('urlBuilder.qrCode.aria.scannable' | translate)
+        ">
       </qrcode>
     </div>
 
@@ -26,30 +33,48 @@
       <!-- Customization Controls -->
       <div class="qr-code-controls">
         <div class="control-group">
-          <label for="qr-size">Size</label>
+          <label for="qr-size">{{ 'urlBuilder.qrCode.options.size' | translate }}</label>
           <select
             id="qr-size"
             [value]="selectedSize()"
             (change)="onSizeChange(+$any($event.target).value)"
             class="form-select">
-            <option [value]="QrCodeSizePreset.SMALL">Small (128px)</option>
-            <option [value]="QrCodeSizePreset.MEDIUM">Medium (256px)</option>
-            <option [value]="QrCodeSizePreset.LARGE">Large (512px)</option>
-            <option [value]="QrCodeSizePreset.XLARGE">XLarge (1024px)</option>
+            <option [value]="QrCodeSizePreset.SMALL">
+              {{ 'urlBuilder.qrCode.options.small' | translate }}
+            </option>
+            <option [value]="QrCodeSizePreset.MEDIUM">
+              {{ 'urlBuilder.qrCode.options.medium' | translate }}
+            </option>
+            <option [value]="QrCodeSizePreset.LARGE">
+              {{ 'urlBuilder.qrCode.options.large' | translate }}
+            </option>
+            <option [value]="QrCodeSizePreset.XLARGE">
+              {{ 'urlBuilder.qrCode.options.xlarge' | translate }}
+            </option>
           </select>
         </div>
 
         <div class="control-group">
-          <label for="qr-error-correction">Error Correction</label>
+          <label for="qr-error-correction">
+            {{ 'urlBuilder.qrCode.options.errorCorrection' | translate }}
+          </label>
           <select
             id="qr-error-correction"
             [value]="selectedErrorCorrection()"
             (change)="onErrorCorrectionChange($any($event.target).value)"
             class="form-select">
-            <option [value]="ErrorCorrectionLevel.L">Low (7%)</option>
-            <option [value]="ErrorCorrectionLevel.M">Medium (15%)</option>
-            <option [value]="ErrorCorrectionLevel.Q">Quartile (25%)</option>
-            <option [value]="ErrorCorrectionLevel.H">High (30%)</option>
+            <option [value]="ErrorCorrectionLevel.L">
+              {{ 'urlBuilder.qrCode.options.errorCorrectionLevels.low' | translate }}
+            </option>
+            <option [value]="ErrorCorrectionLevel.M">
+              {{ 'urlBuilder.qrCode.options.errorCorrectionLevels.medium' | translate }}
+            </option>
+            <option [value]="ErrorCorrectionLevel.Q">
+              {{ 'urlBuilder.qrCode.options.errorCorrectionLevels.quartile' | translate }}
+            </option>
+            <option [value]="ErrorCorrectionLevel.H">
+              {{ 'urlBuilder.qrCode.options.errorCorrectionLevels.high' | translate }}
+            </option>
           </select>
         </div>
       </div>
@@ -60,22 +85,22 @@
           type="button"
           (click)="onDownload(QrCodeExportFormat.PNG)"
           class="btn btn-secondary"
-          aria-label="Download as PNG">
-          Download PNG
+          [attr.aria-label]="'urlBuilder.qrCode.download.png' | translate">
+          {{ 'urlBuilder.qrCode.download.png' | translate }}
         </button>
         <button
           type="button"
           (click)="onDownload(QrCodeExportFormat.SVG)"
           class="btn btn-secondary"
-          aria-label="Download as SVG">
-          Download SVG
+          [attr.aria-label]="'urlBuilder.qrCode.download.svg' | translate">
+          {{ 'urlBuilder.qrCode.download.svg' | translate }}
         </button>
         <button
           type="button"
           (click)="onCopy()"
           class="btn btn-secondary"
-          aria-label="Copy to clipboard">
-          Copy to Clipboard
+          [attr.aria-label]="'urlBuilder.qrCode.copyToClipboard' | translate">
+          {{ 'urlBuilder.qrCode.copyToClipboard' | translate }}
         </button>
       </div>
     }

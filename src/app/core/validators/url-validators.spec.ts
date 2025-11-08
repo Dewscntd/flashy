@@ -84,12 +84,12 @@ describe('url-validators', () => {
         expect(result?.['absoluteUrl']).toBeDefined();
       });
 
-      it('should return error for URL without protocol', () => {
+      it('should return null for URL without protocol (auto-prepends https://)', () => {
         const control = new FormControl('example.com');
         const validator = absoluteUrlValidator();
         const result = validator(control);
-        expect(result).not.toBeNull();
-        expect(result?.['absoluteUrl']).toBeDefined();
+        // After our changes, domains without protocol are valid (we auto-prepend https://)
+        expect(result).toBeNull();
       });
 
       it('should return error for malformed URL', () => {
@@ -98,7 +98,8 @@ describe('url-validators', () => {
         const result = validator(control);
         expect(result).not.toBeNull();
         expect(result?.['absoluteUrl']).toBeDefined();
-        expect(result?.['absoluteUrl'].message).toBe('Invalid URL format');
+        // "not a url" doesn't have a dot, so it fails the hostname validation
+        expect(result?.['absoluteUrl'].message).toBe('URL must include a valid domain (e.g., example.com)');
       });
 
       it('should return error for URL with spaces', () => {

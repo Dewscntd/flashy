@@ -6,6 +6,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ThemeToggleComponent } from './theme-toggle.component';
 import { ThemeService } from '../../../core/services/theme.service';
+import { TranslationService } from '../../../core/services/translation.service';
 import { signal } from '@angular/core';
 
 describe('ThemeToggleComponent', () => {
@@ -13,6 +14,19 @@ describe('ThemeToggleComponent', () => {
   let fixture: ComponentFixture<ThemeToggleComponent>;
   let mockThemeService: jasmine.SpyObj<ThemeService>;
   let isDarkModeSignal: ReturnType<typeof signal<boolean>>;
+
+  const translationServiceStub = {
+    instant: jasmine.createSpy('instant').and.callFake((key: string) => {
+      switch (key) {
+        case 'theme.toggle.switchToLight':
+          return 'Switch to light mode';
+        case 'theme.toggle.switchToDark':
+          return 'Switch to dark mode';
+        default:
+          return key;
+      }
+    })
+  };
 
   beforeEach(async () => {
     // Create a signal for dark mode state
@@ -26,7 +40,8 @@ describe('ThemeToggleComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ThemeToggleComponent],
       providers: [
-        { provide: ThemeService, useValue: mockThemeService }
+        { provide: ThemeService, useValue: mockThemeService },
+        { provide: TranslationService, useValue: translationServiceStub }
       ]
     }).compileComponents();
 
@@ -74,8 +89,7 @@ describe('ThemeToggleComponent', () => {
     it('should have correct aria-label', () => {
       const button = fixture.nativeElement.querySelector('button');
       const ariaLabel = button.getAttribute('aria-label');
-      expect(ariaLabel).toBeTruthy();
-      expect(ariaLabel).toContain('mode');
+      expect(ariaLabel).toBe('Switch to dark mode');
     });
 
     it('should show sun icon in light mode', () => {
@@ -150,12 +164,12 @@ describe('ThemeToggleComponent', () => {
       isDarkModeSignal.set(false);
       fixture.detectChanges();
       let button = fixture.nativeElement.querySelector('button');
-      expect(button.getAttribute('aria-label')).toContain('dark');
-      
+      expect(button.getAttribute('aria-label')).toBe('Switch to dark mode');
+
       isDarkModeSignal.set(true);
       fixture.detectChanges();
       button = fixture.nativeElement.querySelector('button');
-      expect(button.getAttribute('aria-label')).toContain('light');
+      expect(button.getAttribute('aria-label')).toBe('Switch to light mode');
     });
   });
 
@@ -197,15 +211,15 @@ describe('ThemeToggleComponent', () => {
     });
   });
 
-  describe('ariaLabel getter', () => {
+  describe('ariaLabel computed', () => {
     it('should return correct label for light mode', () => {
       isDarkModeSignal.set(false);
-      expect(component.ariaLabel).toBe('Switch to dark mode');
+      expect(component.ariaLabel()).toBe('Switch to dark mode');
     });
 
     it('should return correct label for dark mode', () => {
       isDarkModeSignal.set(true);
-      expect(component.ariaLabel).toBe('Switch to light mode');
+      expect(component.ariaLabel()).toBe('Switch to light mode');
     });
   });
 });

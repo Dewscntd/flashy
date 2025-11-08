@@ -141,11 +141,52 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 1rem; // 16px - base font size for readability
   background: transparent;
   color: var(--color-text-primary);
-  line-height: 1.5;
+  line-height: 1.6; // Improved readability
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   transition: background-color var(--transition-normal), color var(--transition-normal);
+}
+
+/* Typography Hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--tui-font-text);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(1.75rem, 4vw, 2.25rem); // 28-36px
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3.5vw, 1.875rem); // 24-30px
+}
+
+h3 {
+  font-size: clamp(1.25rem, 3vw, 1.5rem); // 20-24px
+}
+
+p, div {
+  font-family: var(--tui-font-text);
+  font-size: 1rem; // 16px
+  line-height: 1.6;
+}
+
+small {
+  font-size: 0.875rem; // 14px
+  line-height: 1.5;
+}
+
+/* Input text consistent sizing */
+input, textarea, select, button {
+  font-family: var(--tui-font-text);
+  font-size: 0.9375rem; // 15px - slightly smaller than body for form elements
+  line-height: 1.5;
 }
 
 [data-theme="dark"] {
@@ -219,19 +260,24 @@ select {
   padding: 0.75rem 1rem;
   background: var(--color-input-background);
   color: var(--color-input-text);
-  transition: border-color var(--transition-fast),
-              box-shadow var(--transition-fast),
-              background-color var(--transition-fast);
+  transition: all var(--transition-fast);
+  font-weight: 500;
+
+  &:hover:not(:disabled) {
+    border-color: color-mix(in srgb, var(--color-input-border-focus) 60%, var(--color-input-border) 40%);
+  }
 
   &:focus {
     outline: none;
     border-color: var(--color-input-border-focus);
     box-shadow: 0 0 0 3px var(--color-focus-ring);
     background: var(--color-input-background);
+    transform: translateY(-1px);
   }
 
   &::placeholder {
     color: var(--color-input-placeholder);
+    font-weight: 400;
   }
 
   &:disabled {

@@ -5,6 +5,7 @@
  */
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { QrCodePreviewComponent } from './qr-code-preview.component';
 import {
   ErrorCorrectionLevel,
@@ -18,7 +19,7 @@ describe('QrCodePreviewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [QrCodePreviewComponent]
+      imports: [QrCodePreviewComponent, HttpClientTestingModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(QrCodePreviewComponent);

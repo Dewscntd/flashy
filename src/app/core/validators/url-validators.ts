@@ -8,6 +8,14 @@ import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 /**
  * Validates that a string is a valid absolute URL.
  * More robust than simple pattern matching.
+ * Accepts URLs with or without protocol - will auto-prepend https:// if missing.
+ *
+ * Validation Logic:
+ * - User can type domain without protocol: "example.com" → valid
+ * - User can type with http://: "http://example.com" → valid (will be converted to https://)
+ * - User can type with https://: "https://example.com" → valid
+ * - Localhost is allowed: "localhost:4200" → valid
+ * - Must have valid hostname with dot OR be localhost
  *
  * @returns ValidatorFn that returns null if valid, or ValidationErrors if invalid
  */
@@ -20,11 +28,30 @@ export function absoluteUrlValidator(): ValidatorFn {
     }
 
     try {
-      const url = new URL(value);
-      // Ensure it's an absolute URL with a protocol
-      if (!url.protocol || !url.hostname) {
-        return { absoluteUrl: { value, message: 'URL must include protocol and hostname' } };
+      // Trim whitespace for validation
+      const trimmedValue = value.trim();
+
+      if (trimmedValue.length === 0) {
+        return null; // Empty after trim - let required validator handle
       }
+
+      // Remove any existing protocol for consistent validation
+      const valueWithoutProtocol = trimmedValue.replace(/^https?:\/\//i, '');
+
+      // Validate with https:// prepended
+      const urlToValidate = `https://${valueWithoutProtocol}`;
+      const url = new URL(urlToValidate);
+
+      // Ensure it has a valid hostname
+      if (!url.hostname || url.hostname.length === 0) {
+        return { absoluteUrl: { value, message: 'URL must include a valid domain' } };
+      }
+
+      // Basic hostname validation - must have at least one dot or be localhost
+      if (!url.hostname.includes('.') && url.hostname !== 'localhost') {
+        return { absoluteUrl: { value, message: 'URL must include a valid domain (e.g., example.com)' } };
+      }
+
       return null;
     } catch {
       return { absoluteUrl: { value, message: 'Invalid URL format' } };

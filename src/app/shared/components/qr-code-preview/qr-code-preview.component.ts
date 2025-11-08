@@ -14,6 +14,7 @@ import {
   QrCodeSizePreset,
   DEFAULT_QR_CODE_OPTIONS
 } from '../../../core/models/qr-code.model';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 /**
  * Standalone component for QR code display and interaction.
@@ -22,7 +23,7 @@ import {
 @Component({
   selector: 'app-qr-code-preview',
   standalone: true,
-  imports: [CommonModule, QRCodeComponent],
+  imports: [CommonModule, QRCodeComponent, TranslatePipe],
   templateUrl: './qr-code-preview.component.html',
   styleUrl: './qr-code-preview.component.scss'
 })

@@ -32,25 +32,35 @@
     "title": "בונה כתובות URL",
     "subtitle": "Playful Glass Suite"
   },
+  "language": {
+    "switcher": {
+      "aria": {
+        "toggle": "שנה שפה. נוכחית: {{language}}",
+        "option": "עבור ל{{language}}",
+        "placeholder": "מחליף שפה נטען"
+      }
+    }
+  },
   "urlBuilder": {
     "form": {
       "baseUrl": {
         "label": "כתובת URL בסיסית",
-        "placeholder": "https://example.com",
-        "error": "נדרשת כתובת URL מלאה ותקינה"
+        "placeholder": "example.com",
+        "error": "נדרשת כתובת URL מלאה ותקינה",
+        "prefixDescription": "הכתובת תקבל אוטומטית קידומת https://"
       },
       "utmParams": {
         "legend": "פרמטרי UTM (אופציונלי)",
         "source": {
-          "label": "utm_source",
+          "label": "מקור",
           "placeholder": "לדוגמה: google, newsletter"
         },
         "medium": {
-          "label": "utm_medium",
+          "label": "ערוץ",
           "placeholder": "לדוגמה: cpc, email"
         },
         "campaign": {
-          "label": "utm_campaign",
+          "label": "קמפיין",
           "placeholder": "לדוגמה: summer_sale"
         }
       },
@@ -84,6 +94,17 @@
         "regenerateQr": "צור מחדש קוד QR",
         "generating": "יוצר...",
         "save": "שמור בנייה"
+      },
+      "aria": {
+        "region": "תצוגת URL",
+        "generatedUrl": "כתובת URL שנוצרה",
+        "shortenedUrl": "כתובת URL מקוצרת",
+        "characterCount": "מספר תווים",
+        "parameterCount": "מספר פרמטרים",
+        "copy": "העתק כתובת URL ללוח",
+        "shorten": "קצר כתובת URL",
+        "qr": "צור קוד QR",
+        "save": "שמור בניית URL"
       }
     },
     "qrCode": {
@@ -94,6 +115,10 @@
         "svg": "הורד SVG"
       },
       "copyToClipboard": "העתק ללוח",
+      "aria": {
+        "alt": "תצוגה מקדימה של קוד QR",
+        "scannable": "קוד QR ניתן לסריקה"
+      },
       "options": {
         "size": "גודל",
         "small": "קטן (128px)",
@@ -113,6 +138,12 @@
   },
   "history": {
     "title": "בניות אחרונות",
+    "aria": {
+      "region": "היסטוריית בניות אחרונות",
+      "filter": "סינון היסטוריה",
+      "loadBuild": "טען בנייה: {{url}}",
+      "deleteBuild": "מחק בנייה מ־{{date}}"
+    },
     "filter": {
       "placeholder": "סנן לפי URL, פרמטרים...",
       "label": "סנן בניות"
@@ -120,11 +151,21 @@
     "empty": {
       "noBuilds": "אין עדיין בניות שמורות.",
       "noBuildsHint": "שמור את בניית ה-URL הראשונה שלך כדי לראות אותה כאן!",
-      "noResults": "לא נמצאו בניות התואמות לחיפוש."
+      "noResults": "לא נמצאו בניות התואמות לחיפוש.",
+      "noResultsHint": "נסה להתאים את מונחי החיפוש שלך",
+      "tipLabel": "טיפ:",
+      "tipMessage": "השתמש בכפתור \"שמור בנייה\" לאחר יצירת כתובת URL"
     },
     "actions": {
       "load": "טען בנייה",
-      "delete": "מחק בנייה"
+      "delete": "מחק בנייה",
+      "deleteTooltip": "מחק את הבנייה הזו"
+    },
+    "dialog": {
+      "deleteTitle": "אישור מחיקה",
+      "deleteMessage": "האם אתה בטוח שברצונך למחוק את הבנייה הזו? לא ניתן לבטל פעולה זו.",
+      "deleteConfirm": "מחק",
+      "deleteCancel": "ביטול"
     },
     "loading": "טוען היסטוריה...",
     "error": "טעינת ההיסטוריה נכשלה."
@@ -155,7 +196,11 @@
     "qrCodeDownloadFailed": "הורדת קוד QR נכשלה",
     "qrCodeCopied": "קוד QR הועתק ללוח!",
     "qrCodeCopyFailed": "העתקת קוד QR ללוח נכשלה",
-    "qrCodeNotFound": "קוד QR לא נמצא. אנא צור מחדש."
+    "qrCodeNotFound": "קוד QR לא נמצא. אנא צור מחדש.",
+    "aria": {
+      "region": "התראות",
+      "dismiss": "סגור התראה"
+    }
   },
   "theme": {
     "toggle": {

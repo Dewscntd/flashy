@@ -1,4 +1,8 @@
-<div class="toast-container" role="region" aria-label="Notifications" aria-live="polite">
+<div
+  class="toast-container"
+  role="region"
+  [attr.aria-label]="'notifications.aria.region' | translate"
+  aria-live="polite">
   @for (notification of notifications(); track notification.id) {
     <div
       [class]="'toast ' + getTypeClass(notification.type)"
@@ -21,7 +25,7 @@
         tuiButton
         appearance="flat"
         size="s"
-        aria-label="Dismiss notification">
+        [attr.aria-label]="'notifications.aria.dismiss' | translate">
         &times;
       </button>
     </div>

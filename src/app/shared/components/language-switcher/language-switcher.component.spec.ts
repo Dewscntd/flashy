@@ -19,7 +19,7 @@ describe('LanguageSwitcherComponent', () => {
   beforeEach(async () => {
     currentLocaleSignal = signal<'en' | 'he'>('en');
 
-    const translationServiceSpy = jasmine.createSpyObj('TranslationService', ['setLocale'], {
+    const translationServiceSpy = jasmine.createSpyObj('TranslationService', ['setLocale', 'instant'], {
       locale$: currentLocaleSignal.asReadonly(),
       supportedLocales: SUPPORTED_LOCALES
     });
@@ -36,6 +36,7 @@ describe('LanguageSwitcherComponent', () => {
     translationService = TestBed.inject(TranslationService) as jasmine.SpyObj<TranslationService>;
 
     translationService.setLocale.and.returnValue(Promise.resolve());
+    translationService.instant.and.callFake((key: string) => key);
 
     fixture.detectChanges();
   });

@@ -32,25 +32,35 @@
     "title": "URL Builder",
     "subtitle": "Playful Glass Suite"
   },
+  "language": {
+    "switcher": {
+      "aria": {
+        "toggle": "Change language. Current: {{language}}",
+        "option": "Switch to {{language}}",
+        "placeholder": "Language switcher loading"
+      }
+    }
+  },
   "urlBuilder": {
     "form": {
       "baseUrl": {
         "label": "Base URL",
-        "placeholder": "https://example.com",
-        "error": "A valid absolute URL is required"
+        "placeholder": "example.com",
+        "error": "A valid absolute URL is required",
+        "prefixDescription": "URL will automatically be prefixed with https://"
       },
       "utmParams": {
         "legend": "UTM Parameters (Optional)",
         "source": {
-          "label": "utm_source",
+          "label": "Source",
           "placeholder": "e.g., google, newsletter"
         },
         "medium": {
-          "label": "utm_medium",
+          "label": "Medium",
           "placeholder": "e.g., cpc, email"
         },
         "campaign": {
-          "label": "utm_campaign",
+          "label": "Campaign",
           "placeholder": "e.g., summer_sale"
         }
       },
@@ -84,6 +94,17 @@
         "regenerateQr": "Regenerate QR Code",
         "generating": "Generating...",
         "save": "Save Build"
+      },
+      "aria": {
+        "region": "URL Preview",
+        "generatedUrl": "Generated URL",
+        "shortenedUrl": "Shortened URL",
+        "characterCount": "Character count",
+        "parameterCount": "Parameter count",
+        "copy": "Copy URL to clipboard",
+        "shorten": "Shorten URL",
+        "qr": "Generate QR code",
+        "save": "Save URL build"
       }
     },
     "qrCode": {
@@ -94,6 +115,10 @@
         "svg": "Download SVG"
       },
       "copyToClipboard": "Copy to Clipboard",
+      "aria": {
+        "alt": "QR code preview",
+        "scannable": "Scannable QR code"
+      },
       "options": {
         "size": "Size",
         "small": "Small (128px)",
@@ -113,6 +138,12 @@
   },
   "history": {
     "title": "Recent Builds",
+    "aria": {
+      "region": "Recent Builds History",
+      "filter": "Filter history",
+      "loadBuild": "Load build: {{url}}",
+      "deleteBuild": "Delete build from {{date}}"
+    },
     "filter": {
       "placeholder": "Filter by URL, parameters...",
       "label": "Filter builds"
@@ -120,11 +151,15 @@
     "empty": {
       "noBuilds": "No saved builds yet.",
       "noBuildsHint": "Save your first URL build to see it here!",
-      "noResults": "No builds match your search."
+      "noResults": "No builds match your search.",
+      "noResultsHint": "Try adjusting your search terms",
+      "tipLabel": "Tip:",
+      "tipMessage": "Use the \"Save Build\" button after creating a URL"
     },
     "actions": {
       "load": "Load build",
-      "delete": "Delete build"
+      "delete": "Delete build",
+      "deleteTooltip": "Delete this build"
     },
     "dialog": {
       "deleteTitle": "Confirm Deletion",
@@ -161,7 +196,11 @@
     "qrCodeDownloadFailed": "Failed to download QR code",
     "qrCodeCopied": "QR code copied to clipboard!",
     "qrCodeCopyFailed": "Failed to copy QR code to clipboard",
-    "qrCodeNotFound": "QR code not found. Please regenerate."
+    "qrCodeNotFound": "QR code not found. Please regenerate.",
+    "aria": {
+      "region": "Notifications",
+      "dismiss": "Dismiss notification"
+    }
   },
   "theme": {
     "toggle": {

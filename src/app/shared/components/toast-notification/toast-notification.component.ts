@@ -8,12 +8,13 @@ import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../core/services/notification.service';
 import { TuiButton } from '@taiga-ui/core/components/button';
+import { TranslatePipe } from '../../../core/pipes/translate.pipe';
 
 @Component({
   selector: 'app-toast-notification',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TuiButton],
+  imports: [CommonModule, TuiButton, TranslatePipe],
   templateUrl: './toast-notification.component.html',
   styleUrl: './toast-notification.component.scss'
 })

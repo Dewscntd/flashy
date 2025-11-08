@@ -1,4 +1,7 @@
-<div class="history-container" role="region" aria-label="Recent Builds History">
+<div
+  class="history-container"
+  role="region"
+  [attr.aria-label]="'history.aria.region' | translate">
   <h2>{{ 'history.title' | translate }}</h2>
 
   <div class="filter-section">
@@ -9,7 +12,7 @@
       [placeholder]="'history.filter.placeholder' | translate"
       (input)="onFilterChange($event)"
       class="filter-input"
-      aria-label="Filter history"
+      [attr.aria-label]="'history.aria.filter' | translate"
       aria-controls="history-list">
   </div>
 
@@ -23,7 +26,7 @@
           (click)="onBuildClick(build)"
           (keydown.enter)="onBuildClick(build)"
           (keydown.space)="onBuildClick(build); $event.preventDefault()"
-          [attr.aria-label]="'Load build: ' + build.finalUrl">
+          [attr.aria-label]="'history.aria.loadBuild' | translate:{ url: build.finalUrl }">
 
           <div class="history-content">
             <span class="url" title="{{ build.finalUrl }}">
@@ -41,8 +44,11 @@
             appearance="flat"
             size="s"
             (click)="onDeleteBuild($event, build)"
-            [attr.aria-label]="'Delete build from ' + (build.createdAt | date:'short')"
-            title="Delete this build">
+            [attr.aria-label]="
+              'history.aria.deleteBuild' |
+                translate:{ date: (build.createdAt | date:'short') || build.createdAt }
+            "
+            [title]="'history.actions.deleteTooltip' | translate">
             &times;
           </button>
         </li>
@@ -52,7 +58,7 @@
     <div class="empty-state" role="status">
       <div class="empty-icon" aria-hidden="true">🔍</div>
       <h3 class="empty-title">{{ 'history.empty.noResults' | translate }}</h3>
-      <p class="empty-hint">Try adjusting your search terms</p>
+      <p class="empty-hint">{{ 'history.empty.noResultsHint' | translate }}</p>
     </div>
   } @else {
     <div class="empty-state" role="status">
@@ -61,7 +67,10 @@
       <p class="empty-description">{{ 'history.empty.noBuildsHint' | translate }}</p>
       <p class="empty-tip">
         <span class="tip-icon" aria-hidden="true">💡</span>
-        <span>Tip: Use the "Save Build" button after creating a URL</span>
+        <span>
+          <strong>{{ 'history.empty.tipLabel' | translate }}</strong>
+          {{ 'history.empty.tipMessage' | translate }}
+        </span>
       </p>
     </div>
   }

@@ -7,12 +7,13 @@ A production-grade URL builder application built with Angular 20, demonstrating 
 - **Angular Version:** 20.3.9
 - **TypeScript Version:** 5.7
 - **Architecture:** Clean Architecture + Domain-Driven Design
-- **Time Spent:** ~20 hours
+- **Time Spent:** ~22 hours
   - Initial implementation: 6 hours
   - Dark mode + i18n: 4 hours
   - QR code generation: 3 hours
   - URL shortening integration: 3 hours
   - Testing + optimization: 4 hours
+  - UI/UX improvements + i18n fixes: 2 hours
 
 ## 🚀 Quick Start
 
@@ -276,9 +277,9 @@ async shortenUrl(url: string): Promise<string> {
 ## 🧪 Testing
 
 ### Test Coverage
-- **606 unit tests** passing
+- **641 unit tests** passing (92% pass rate)
 - **79 E2E tests** with Playwright
-- **78% code coverage**
+- **75% code coverage**
 
 ### Testing Strategy
 - **Unit tests**: Happy paths + critical edge cases
@@ -349,9 +350,9 @@ Production:   530 KB (raw) / 137 KB (gzipped)
 - **Components:** 12 standalone components
 - **Services:** 15 domain/application services
 - **Models:** 8 TypeScript interfaces/types
-- **Tests:** 685 total (606 unit + 79 E2E)
+- **Tests:** 720 total (641 unit passing + 79 E2E)
 - **WCAG Compliance:** 95%+ (AA level)
-- **Bundle Size:** 137 KB gzipped
+- **Bundle Size:** 139 KB gzipped
 - **Lighthouse Score:** 95+ (Performance, Accessibility, Best Practices)
 
 ## 🔮 TODOs / Future Enhancements

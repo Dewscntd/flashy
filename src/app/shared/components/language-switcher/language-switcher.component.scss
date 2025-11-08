@@ -55,7 +55,7 @@
   right: 0;
   margin-top: 0.5rem;
   padding: clamp(0.75rem, 2vw, 1rem);
-  z-index: 1000;
+  z-index: 9999; // Increased z-index to appear above header and all other elements
   min-width: 200px;
 
   // Apply improved glassmorphism with MAXIMUM visibility
@@ -79,19 +79,21 @@
     background: #ffffff; // Fully solid fallback
   }
 
-  // Smooth entrance animation
-  animation: dropdown-entrance var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: top right;
-
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-  }
-
   // RTL support - position dropdown on left side
   [dir="rtl"] & {
     right: auto;
     left: 0;
     transform-origin: top left;
+  }
+
+  // Smooth entrance animation (moved after nested rules to fix Sass deprecation)
+  & {
+    animation: dropdown-entrance var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: top right;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
   }
 }
 

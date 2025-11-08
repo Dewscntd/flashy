@@ -7,6 +7,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { signal } from '@angular/core';
 import { ToastNotificationComponent } from './toast-notification.component';
 import { NotificationService, Notification } from '../../../core/services/notification.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ToastNotificationComponent', () => {
   let component: ToastNotificationComponent;
@@ -22,7 +23,7 @@ describe('ToastNotificationComponent', () => {
     });
 
     await TestBed.configureTestingModule({
-      imports: [ToastNotificationComponent],
+      imports: [ToastNotificationComponent, HttpClientTestingModule],
       providers: [
         { provide: NotificationService, useValue: mockNotificationService }
       ]

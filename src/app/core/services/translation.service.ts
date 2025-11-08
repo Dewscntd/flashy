@@ -38,6 +38,10 @@ export class TranslationService {
   // Loading state
   private readonly loading = signal<boolean>(false);
 
+  // Version counter that increments when translations change
+  // Used to trigger change detection in zoneless mode
+  private readonly translationVersion = signal<number>(0);
+
   // Track initialization promise
   private initializationPromise: Promise<void> | null = null;
 
@@ -46,6 +50,7 @@ export class TranslationService {
    */
   readonly locale$ = this.currentLocale.asReadonly();
   readonly isLoading$ = this.loading.asReadonly();
+  readonly version$ = this.translationVersion.asReadonly();
 
   /**
    * Computed locale metadata
@@ -136,6 +141,10 @@ export class TranslationService {
 
       this.translations.set(translation);
       this.updateDocumentLocale(locale);
+
+      // Increment version to trigger change detection in zoneless mode
+      // This ensures all components using TranslatePipe re-render with new translations
+      this.translationVersion.update(v => v + 1);
     } catch (error) {
       console.error(`Failed to load translations for ${locale}`, error);
 
@@ -157,6 +166,11 @@ export class TranslationService {
    * @returns Translated string or key if not found
    */
   private getTranslation(key: string): string {
+    // CRITICAL: Read currentLocale() to establish reactive dependency
+    // This ensures computed signals calling instant() re-evaluate when locale changes
+    // Required for zoneless change detection with signal-based reactivity
+    const _locale = this.currentLocale();
+
     const keys = key.split('.');
     let value: string | Translation = this.translations();
 

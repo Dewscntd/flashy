@@ -3,33 +3,34 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.1));
-  backdrop-filter: blur($blur) saturate(1.05);
-  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(148, 163, 184, 0.3);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.88));
+  backdrop-filter: blur($blur) saturate(1.1);
+  color: var(--color-text-primary);
   cursor: pointer;
-  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
-  box-shadow: 0 16px 32px rgba(15, 23, 42, 0.2);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.12), 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
 .theme-toggle {
   @include glassy-button();
 
   &:hover {
-    transform: translateY(-2px) scale(1.05);
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.18));
-    border-color: rgba(255, 255, 255, 0.55);
+    transform: translateY(-1px);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
+    border-color: rgba(102, 126, 234, 0.35);
+    color: var(--color-brand-primary);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
   }
 
   &:focus-visible {
     // WCAG 2.1 AA: High-contrast focus ring visible on gradient background
-    outline: 3px solid rgba(255, 255, 255, 0.95);
-    outline-offset: 4px;
-    box-shadow: 0 0 0 6px rgba(102, 126, 234, 0.4),
-                0 16px 32px rgba(15, 23, 42, 0.3);
+    outline: 2px solid var(--color-brand-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
   }
 
   &:active {
@@ -37,8 +38,8 @@
   }
 
   .theme-icon {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     transition: transform 0.4s ease, opacity 0.3s ease;
   }
 
@@ -53,18 +54,22 @@
 
 :host-context([data-theme="dark"]) .theme-toggle {
   border-color: rgba(148, 163, 184, 0.35);
-  background: linear-gradient(145deg, rgba(30, 41, 59, 0.8), rgba(15, 23, 42, 0.65));
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.95));
+  color: rgba(226, 232, 240, 0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.25);
 
   &:hover {
-    border-color: rgba(148, 163, 184, 0.55);
+    border-color: rgba(99, 102, 241, 0.5);
+    background: linear-gradient(145deg, rgba(30, 41, 59, 1), rgba(15, 23, 42, 0.98));
+    color: rgba(129, 140, 248, 1);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.25);
   }
 
   &:focus-visible {
     // WCAG 2.1 AA: High-contrast focus ring for dark mode
-    outline: 3px solid rgba(147, 197, 253, 0.95);
-    outline-offset: 4px;
-    box-shadow: 0 0 0 6px rgba(99, 102, 241, 0.5),
-                0 16px 32px rgba(0, 0, 0, 0.4);
+    outline: 2px solid rgba(129, 140, 248, 0.9);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.3);
   }
 }
 
