@@ -171,9 +171,13 @@ export class FormStateManagerService {
     // Clear existing params
     this.params.clear();
 
+    // Strip protocol from baseUrl since UI already shows "https://" prefix
+    // This prevents "https://https://example.com" duplication
+    const baseUrlWithoutProtocol = data.baseUrl.replace(/^https?:\/\//i, '');
+
     // Set form values
     this.form.patchValue({
-      baseUrl: data.baseUrl,
+      baseUrl: baseUrlWithoutProtocol,
       utmSource: data.utmSource ?? '',
       utmMedium: data.utmMedium ?? '',
       utmCampaign: data.utmCampaign ?? ''
