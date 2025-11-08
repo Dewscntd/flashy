@@ -44,27 +44,6 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
   }
 }
 
-// Skip navigation link (WCAG 2.4.1 - Bypass Blocks)
-.skip-link {
-  position: absolute;
-  top: -40px;
-  left: 0;
-  background: var(--color-brand-primary);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  text-decoration: none;
-  border-radius: 0 0 8px 0;
-  font-weight: 600;
-  z-index: 1000;
-  transition: top var(--transition-fast);
-
-  &:focus {
-    top: 0;
-    outline: 3px solid var(--color-focus-ring);
-    outline-offset: 2px;
-  }
-}
-
 // Placeholder for language switcher when deferred
 .language-placeholder {
   display: inline-flex;
@@ -134,6 +113,7 @@ $required: color-mix(in srgb, var(--color-error) 80%, white 20%);
   grid-template-columns: 1fr auto;
   align-items: center;
   padding: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: clamp(1.75rem, 4vw, 2.75rem);
   border-radius: clamp(22px, 4vw, 32px);
   box-shadow: 0 24px 64px rgba(15, 23, 42, 0.24);
   position: relative;
