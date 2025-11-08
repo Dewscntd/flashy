@@ -354,7 +354,7 @@ describe('HistoryComponent', () => {
 
       component.onDeleteBuild(event, build);
 
-      expect(confirmSpy).toHaveBeenCalledWith('Are you sure you want to delete this build?');
+      expect(confirmSpy).toHaveBeenCalledWith('history.dialog.deleteMessage');
     });
 
     it('should delete build when confirmed', () => {
