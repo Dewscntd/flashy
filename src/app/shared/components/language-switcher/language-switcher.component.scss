@@ -1,5 +1,20 @@
 .language-switcher {
   position: relative;
+
+  // Backdrop overlay when dropdown is open - improves dropdown visibility
+  &.is-open::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.25); // Darker backdrop for better focus
+    z-index: 999;
+    pointer-events: none;
+    animation: backdrop-fade-in var(--transition-normal);
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
 }
 
 .language-toggle-button {
@@ -43,23 +58,25 @@
   z-index: 1000;
   min-width: 200px;
 
-  // Apply glassmorphism design system matching the app cards
+  // Apply improved glassmorphism with MAXIMUM visibility
   border-radius: clamp(12px, 2.5vw, 16px);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.18);
+  border: 2px solid rgba(148, 163, 184, 0.6); // Thicker, more visible border
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.35), // Stronger shadow
+              0 8px 16px rgba(15, 23, 42, 0.2),   // Additional mid-range shadow
+              0 0 0 1px rgba(255, 255, 255, 0.6) inset; // More visible inner border
   transition: background var(--transition-normal),
               border-color var(--transition-normal),
               box-shadow var(--transition-normal);
 
-  // Glassmorphism effect with backdrop filter
+  // Nearly opaque background for maximum visibility
   @supports (backdrop-filter: blur(18px)) {
     backdrop-filter: blur(18px) saturate(1.08);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.58));
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.97)); // Almost solid
   }
 
   // Fallback for browsers without backdrop-filter support
   @supports not (backdrop-filter: blur(18px)) {
-    background: var(--color-surface-primary, #fff);
+    background: #ffffff; // Fully solid fallback
   }
 
   // Smooth entrance animation
@@ -68,6 +85,13 @@
 
   @media (prefers-reduced-motion: reduce) {
     animation: none;
+  }
+
+  // RTL support - position dropdown on left side
+  [dir="rtl"] & {
+    right: auto;
+    left: 0;
+    transform-origin: top left;
   }
 }
 
@@ -88,30 +112,40 @@
   text-align: left;
 
   &:hover {
-    background: rgba(148, 163, 184, 0.08);
-    transform: translateX(2px);
+    background: rgba(102, 126, 234, 0.25); // More visible hover state
+    transform: translateX(4px);
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15); // Add subtle shadow on hover
+
+    [dir="rtl"] & {
+      transform: translateX(-4px);
+    }
   }
 
   &.active {
     background: var(--color-brand-primary, #667eea);
     color: #fff;
     font-weight: 600;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 
     .locale-name {
-      color: rgba(255, 255, 255, 0.85);
+      color: rgba(255, 255, 255, 0.9);
       font-weight: 500;
     }
 
     &:hover {
       background: var(--color-brand-primary, #667eea);
-      filter: brightness(1.05);
-      transform: translateX(2px);
+      filter: brightness(1.08);
+      transform: translateX(4px);
+
+      [dir="rtl"] & {
+        transform: translateX(-4px);
+      }
     }
   }
 
   // Keyboard navigation focused state
   &.focused {
-    background: rgba(148, 163, 184, 0.12);
+    background: rgba(102, 126, 234, 0.2);
     outline: 2px solid var(--color-input-border-focus);
     outline-offset: 2px;
 
@@ -125,7 +159,7 @@
   &:focus-visible {
     outline: 2px solid var(--color-input-border-focus);
     outline-offset: 2px;
-    background: rgba(148, 163, 184, 0.12);
+    background: rgba(102, 126, 234, 0.2);
 
     &.active {
       background: var(--color-brand-primary, #667eea);
@@ -147,37 +181,44 @@
   font-size: 0.875rem;
 }
 
-// Dark mode support with glassmorphism
+// Dark mode support with improved visibility
 :host-context([data-theme="dark"]) {
+  .language-switcher.is-open::before {
+    background: rgba(0, 0, 0, 0.4); // Darker backdrop in dark mode for better contrast
+  }
+
   .language-dropdown {
-    border-color: rgba(148, 163, 184, 0.42); // Increased opacity for better visibility
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35), // Stronger shadow
-                0 0 0 1px rgba(148, 163, 184, 0.15) inset; // Inner glow for depth
+    border-color: rgba(148, 163, 184, 0.7); // More visible border in dark mode
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6), // Stronger shadows
+                0 8px 16px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(148, 163, 184, 0.4) inset; // More visible inner border
 
     @supports (backdrop-filter: blur(18px)) {
-      background: linear-gradient(135deg, rgba(30, 41, 59, 0.86), rgba(15, 23, 42, 0.84));
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.97)); // Almost solid
     }
 
     @supports not (backdrop-filter: blur(18px)) {
-      background: var(--color-surface-primary, #1e293b);
+      background: #1e293b; // Fully solid fallback
     }
   }
 
   .language-option {
     &:hover {
-      background: rgba(148, 163, 184, 0.12);
+      background: rgba(129, 140, 248, 0.3); // More visible dark mode hover
+      box-shadow: 0 2px 8px rgba(129, 140, 248, 0.2);
     }
 
     &.focused {
-      background: rgba(148, 163, 184, 0.18);
+      background: rgba(129, 140, 248, 0.35);
     }
 
     &.active {
       background: var(--color-brand-primary, #8b5cf6);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 
       &:hover {
         background: var(--color-brand-primary, #8b5cf6);
-        filter: brightness(1.1);
+        filter: brightness(1.15);
       }
     }
   }
@@ -192,5 +233,15 @@
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+// Backdrop fade-in animation
+@keyframes backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
