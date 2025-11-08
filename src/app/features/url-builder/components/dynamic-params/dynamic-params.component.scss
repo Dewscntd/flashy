@@ -9,6 +9,10 @@ $error-soft: rgba(239, 68, 68, 0.35);
   background: color-mix(in srgb, rgba(255, 255, 255, 0.7) 80%, transparent 20%);
   display: grid;
   gap: clamp(0.85rem, 2vw, 1.25rem);
+  // Fix overflow: ensure fieldset respects grid constraints
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 
   legend {
     font: var(--tui-font-text-ui-s);
