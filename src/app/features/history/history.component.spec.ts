@@ -6,14 +6,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { signal } from '@angular/core';
+import { of } from 'rxjs';
 import { HistoryComponent } from './history.component';
 import { UrlBuildRepositoryService } from '../../core/services/url-build-repository.service';
+import { TuiConfirmService } from '@taiga-ui/kit/components/confirm';
 import { UrlBuild } from '../../core/models/url-build.model';
 
 describe('HistoryComponent', () => {
   let component: HistoryComponent;
   let fixture: ComponentFixture<HistoryComponent>;
   let mockRepository: jasmine.SpyObj<UrlBuildRepositoryService>;
+  let mockConfirmService: jasmine.SpyObj<TuiConfirmService>;
   let mockBuildsSignal: any;
 
   const createMockBuild = (overrides?: Partial<UrlBuild>): UrlBuild => ({
@@ -35,10 +38,14 @@ describe('HistoryComponent', () => {
       builds$: mockBuildsSignal.asReadonly()
     });
 
+    mockConfirmService = jasmine.createSpyObj('TuiConfirmService', ['withConfirm']);
+    mockConfirmService.withConfirm.and.returnValue(of(false)); // Default to false
+
     await TestBed.configureTestingModule({
       imports: [HistoryComponent, HttpClientTestingModule],
       providers: [
-        { provide: UrlBuildRepositoryService, useValue: mockRepository }
+        { provide: UrlBuildRepositoryService, useValue: mockRepository },
+        { provide: TuiConfirmService, useValue: mockConfirmService }
       ]
     }).compileComponents();
 
@@ -340,27 +347,31 @@ describe('HistoryComponent', () => {
     it('should stop event propagation', () => {
       const event = jasmine.createSpyObj('Event', ['stopPropagation']);
       const build = createMockBuild();
-      spyOn(window, 'confirm').and.returnValue(false);
 
       component.onDeleteBuild(event, build);
 
       expect(event.stopPropagation).toHaveBeenCalled();
     });
 
-    it('should show confirmation dialog', () => {
+    it('should show confirmation dialog with translated messages', () => {
       const event = jasmine.createSpyObj('Event', ['stopPropagation']);
       const build = createMockBuild();
-      const confirmSpy = spyOn(window, 'confirm').and.returnValue(false);
 
       component.onDeleteBuild(event, build);
 
-      expect(confirmSpy).toHaveBeenCalledWith('history.dialog.deleteMessage');
+      expect(mockConfirmService.withConfirm).toHaveBeenCalled();
+      const callArgs: any = mockConfirmService.withConfirm.calls.mostRecent().args[0];
+      expect(callArgs.label).toBeDefined();
+      expect(callArgs.data).toBeDefined();
+      expect(callArgs.data.content).toBeDefined();
+      expect(callArgs.data.yes).toBeDefined();
+      expect(callArgs.data.no).toBeDefined();
     });
 
     it('should delete build when confirmed', () => {
       const event = jasmine.createSpyObj('Event', ['stopPropagation']);
       const build = createMockBuild({ id: 'test-id' });
-      spyOn(window, 'confirm').and.returnValue(true);
+      mockConfirmService.withConfirm.and.returnValue(of(true));
 
       component.onDeleteBuild(event, build);
 
@@ -370,7 +381,7 @@ describe('HistoryComponent', () => {
     it('should not delete build when canceled', () => {
       const event = jasmine.createSpyObj('Event', ['stopPropagation']);
       const build = createMockBuild();
-      spyOn(window, 'confirm').and.returnValue(false);
+      mockConfirmService.withConfirm.and.returnValue(of(false));
 
       component.onDeleteBuild(event, build);
 
@@ -380,7 +391,7 @@ describe('HistoryComponent', () => {
     it('should prevent loadBuild from triggering', () => {
       const event = jasmine.createSpyObj('Event', ['stopPropagation']);
       const build = createMockBuild();
-      spyOn(window, 'confirm').and.returnValue(true);
+      mockConfirmService.withConfirm.and.returnValue(of(true));
 
       let loadBuildTriggered = false;
       component.loadBuild.subscribe(() => {

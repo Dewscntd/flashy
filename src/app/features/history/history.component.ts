@@ -10,6 +10,7 @@ import { UrlBuildRepositoryService } from '../../core/services/url-build-reposit
 import { UrlBuild } from '../../core/models/url-build.model';
 import { matchesBuild } from './history.utils';
 import { TuiButton } from '@taiga-ui/core/components/button';
+import { TuiConfirmService } from '@taiga-ui/kit/components/confirm';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { TranslationService } from '../../core/services/translation.service';
 
@@ -23,6 +24,7 @@ import { TranslationService } from '../../core/services/translation.service';
 })
 export class HistoryComponent {
   private readonly repository = inject(UrlBuildRepositoryService);
+  private readonly confirmService = inject(TuiConfirmService);
   private readonly translation = inject(TranslationService);
 
   /**
@@ -73,17 +75,25 @@ export class HistoryComponent {
 
   /**
    * Deletes a build from the repository with confirmation dialog.
-   * Uses native browser confirm for simplicity and accessibility.
+   * Uses TuiConfirmService for styled, accessible confirmations.
    */
   onDeleteBuild(event: Event, build: UrlBuild): void {
     event.stopPropagation(); // Prevent triggering the load action
 
-    // Show native confirmation dialog
-    const message = this.translation.instant('history.dialog.deleteMessage');
-    const confirmed = window.confirm(message);
-
-    if (confirmed) {
-      this.repository.delete(build.id);
-    }
+    // Show TaigaUI confirmation dialog
+    this.confirmService
+      .withConfirm({
+        label: this.translation.instant('history.dialog.deleteTitle'),
+        data: {
+          content: this.translation.instant('history.dialog.deleteMessage'),
+          yes: this.translation.instant('history.dialog.deleteConfirm'),
+          no: this.translation.instant('history.dialog.deleteCancel')
+        }
+      })
+      .subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.repository.delete(build.id);
+        }
+      });
   }
 }
