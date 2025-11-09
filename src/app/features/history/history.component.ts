@@ -10,7 +10,9 @@ import { UrlBuildRepositoryService } from '../../core/services/url-build-reposit
 import { UrlBuild } from '../../core/models/url-build.model';
 import { matchesBuild } from './history.utils';
 import { TuiButton } from '@taiga-ui/core/components/button';
-import { TuiConfirmService } from '@taiga-ui/kit/components/confirm';
+import { TuiDialogService } from '@taiga-ui/core/components/dialog';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { TUI_CONFIRM } from '@taiga-ui/kit/components/confirm';
 import { TranslatePipe } from '../../core/pipes/translate.pipe';
 import { TranslationService } from '../../core/services/translation.service';
 
@@ -24,7 +26,7 @@ import { TranslationService } from '../../core/services/translation.service';
 })
 export class HistoryComponent {
   private readonly repository = inject(UrlBuildRepositoryService);
-  private readonly confirmService = inject(TuiConfirmService);
+  private readonly dialogs = inject(TuiDialogService);
   private readonly translation = inject(TranslationService);
 
   /**
@@ -75,22 +77,23 @@ export class HistoryComponent {
 
   /**
    * Deletes a build from the repository with confirmation dialog.
-   * Uses TuiConfirmService for styled, accessible confirmations.
+   * Uses TuiDialogService with TUI_CONFIRM component for styled, accessible confirmations.
    */
   onDeleteBuild(event: Event, build: UrlBuild): void {
     event.stopPropagation(); // Prevent triggering the load action
 
-    // Show TaigaUI confirmation dialog
-    this.confirmService
-      .withConfirm({
+    // Show TaigaUI confirmation dialog using TuiDialogService directly
+    this.dialogs
+      .open<boolean>(TUI_CONFIRM, {
         label: this.translation.instant('history.dialog.deleteTitle'),
+        size: 's',
         data: {
           content: this.translation.instant('history.dialog.deleteMessage'),
           yes: this.translation.instant('history.dialog.deleteConfirm'),
           no: this.translation.instant('history.dialog.deleteCancel')
         }
       })
-      .subscribe((confirmed: boolean) => {
+      .subscribe((confirmed) => {
         if (confirmed) {
           this.repository.delete(build.id);
         }

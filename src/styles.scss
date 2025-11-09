@@ -305,3 +305,144 @@ select {
   outline: 2px solid var(--color-input-border-focus);
   outline-offset: 2px;
 }
+
+/* Taiga UI Dialog Backdrop & Overlay Styling */
+/* Ensures dialog backdrop has proper visibility and contrast */
+
+/* Override Taiga UI CSS variables for dialog backdrop */
+:root {
+  --tui-service-backdrop: rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] {
+  --tui-service-backdrop: rgba(0, 0, 0, 0.85);
+}
+
+/* Taiga UI overlay backdrop - only apply when dialog is open */
+/* The overlay should be invisible by default and only visible when active */
+.t-overlay {
+  background: var(--tui-service-backdrop) !important;
+  backdrop-filter: blur(4px);
+  pointer-events: none !important; /* Default: don't intercept clicks */
+}
+
+/* Only make overlay visible and interactive when it's actively being used with a wrapper */
+.t-wrapper_overlay ~ .t-overlay,
+.t-overlay[data-state="open"],
+.t-overlay._active,
+.t-overlay[style*="opacity: 1"],
+.t-overlay[style*="visibility: visible"] {
+  pointer-events: auto !important;
+}
+
+/* Dialog wrapper container - ensure proper z-index */
+.t-wrapper {
+  z-index: 1000 !important;
+}
+
+/* Taiga UI Confirm Dialog Content Styling */
+/* Style the actual dialog content for maximum visibility */
+tui-confirm,
+[tuiWrapper] {
+  background: var(--color-surface-primary) !important;
+  border: 1px solid var(--color-surface-border) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 16px !important;
+  padding: 2rem !important;
+  min-width: 360px !important;
+  max-width: 480px !important;
+
+  /* Dialog title styling */
+  h3,
+  [tuiTitle],
+  .t-title {
+    color: var(--color-text-primary) !important;
+    font-size: 1.375rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 1rem !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Dialog message/content styling */
+  p,
+  [tuiSubtitle],
+  [tuiText],
+  .t-content {
+    color: var(--color-text-secondary) !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Button container */
+  .t-buttons,
+  [tuiDialogButton] {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+  }
+
+  /* Primary button (confirm/yes) - styled as danger for delete actions */
+  button[appearance="primary"],
+  button[data-appearance="primary"],
+  button.t-button_primary {
+    background: var(--color-button-danger-bg) !important;
+    color: #ffffff !important;
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.75rem !important;
+    border-radius: 8px !important;
+    border: none !important;
+    cursor: pointer;
+    transition: all var(--transition-fast) !important;
+
+    &:hover:not(:disabled) {
+      background: var(--color-button-danger-hover) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Secondary button (cancel/no) */
+  button[appearance="secondary"],
+  button[data-appearance="secondary"],
+  button.t-button_secondary {
+    background: var(--color-button-secondary-bg) !important;
+    color: #ffffff !important;
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.75rem !important;
+    border-radius: 8px !important;
+    border: none !important;
+    cursor: pointer;
+    transition: all var(--transition-fast) !important;
+
+    &:hover:not(:disabled) {
+      background: var(--color-button-secondary-hover) !important;
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  /* Generic button fallback */
+  button:not([appearance]):not([data-appearance]) {
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.75rem !important;
+    border-radius: 8px !important;
+    transition: all var(--transition-fast) !important;
+  }
+}
