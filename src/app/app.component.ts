@@ -22,6 +22,7 @@ import { UrlBuildRepositoryService } from './core/services/url-build-repository.
 import { UrlShortenerService } from './core/services/url-shortener.service';
 import { UrlBuild } from './core/models/url-build.model';
 import { TuiRoot } from '@taiga-ui/core/components/root';
+import { TuiHintDirective } from '@taiga-ui/core/directives/hint';
 import { QrCodeOrchestratorService } from './core/services/qr-code-orchestrator.service';
 import { QrCodeExportFormat, QrCodeOptions } from './core/models/qr-code.model';
 
@@ -32,6 +33,7 @@ import { QrCodeExportFormat, QrCodeOptions } from './core/models/qr-code.model';
   imports: [
     ReactiveFormsModule,
     TuiRoot,
+    TuiHintDirective,
     HistoryComponent,
     UrlPreviewComponent,
     DynamicParamsComponent,

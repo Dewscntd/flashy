@@ -99,6 +99,7 @@ export class UrlBuildRepositoryService {
   /**
    * Loads builds from localStorage on initialization.
    * Initializes with mock data if localStorage is empty (for testing).
+   * Persists mock data to localStorage to ensure consistent display.
    *
    * @returns Array of builds from storage, or mock data if empty
    */
@@ -109,14 +110,27 @@ export class UrlBuildRepositoryService {
 
     const stored = this.storage.getItem<UrlBuild[]>(HISTORY_STORAGE_KEY);
 
-    if (!stored || !Array.isArray(stored)) {
-      return this.getMockData();
+    if (!stored || !Array.isArray(stored) || stored.length === 0) {
+      const mockData = this.getMockData();
+      // Persist mock data to localStorage for consistent display across sessions
+      this.persistToStorage(mockData);
+      return mockData;
     }
 
     // Validate and sanitize stored data
-    return stored
+    const validated = stored
       .filter(isValidUrlBuild)
       .slice(0, MAX_HISTORY_BUILDS);
+
+    // If all stored builds were invalid, return mock data
+    if (validated.length === 0) {
+      const mockData = this.getMockData();
+      // Persist mock data to localStorage for consistent display across sessions
+      this.persistToStorage(mockData);
+      return mockData;
+    }
+
+    return validated;
   }
 
   /**
