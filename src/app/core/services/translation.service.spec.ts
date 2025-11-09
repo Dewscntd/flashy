@@ -78,7 +78,7 @@ describe('TranslationService', () => {
     it('should load default locale translations', async () => {
       const initPromise = service.initialize();
 
-      const req = httpMock.expectOne(`/assets/i18n/${DEFAULT_LOCALE}.json`);
+      const req = httpMock.expectOne(`./assets/i18n/${DEFAULT_LOCALE}.json`);
       req.flush(mockEnglishTranslations);
 
       await initPromise;
@@ -87,24 +87,42 @@ describe('TranslationService', () => {
     });
 
     it('should load stored locale preference', async () => {
-      storageService.getItem.and.returnValue('he');
+      // Create a new TestBed with storage returning 'he'
+      const newStorageService = jasmine.createSpyObj('StorageService', [
+        'getItem',
+        'setItem'
+      ]);
+      newStorageService.getItem.and.returnValue('he');
+
+      TestBed.resetTestingModule();
+      TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule],
+        providers: [
+          TranslationService,
+          { provide: StorageService, useValue: newStorageService }
+        ]
+      });
 
       const newService = TestBed.inject(TranslationService);
+      const newHttpMock = TestBed.inject(HttpTestingController);
+
       const initPromise = newService.initialize();
 
-      const req = httpMock.expectOne('/assets/i18n/he.json');
+      const req = newHttpMock.expectOne('./assets/i18n/he.json');
       req.flush(mockHebrewTranslations);
 
       await initPromise;
 
       expect(newService.locale$()).toBe('he');
+
+      newHttpMock.verify();
     });
   });
 
   describe('translate', () => {
     beforeEach(async () => {
       const initPromise = service.initialize();
-      const req = httpMock.expectOne(`/assets/i18n/${DEFAULT_LOCALE}.json`);
+      const req = httpMock.expectOne(`./assets/i18n/${DEFAULT_LOCALE}.json`);
       req.flush(mockEnglishTranslations);
       await initPromise;
     });
@@ -133,14 +151,21 @@ describe('TranslationService', () => {
       expect(signal()).toBe('Welcome, John');
     });
 
-    it('should handle multiple parameters', () => {
+    it('should handle multiple parameters', async () => {
       const mockTranslations: Translation = {
         greeting: 'Hello {{name}}, you have {{count}} messages'
       };
 
-      const initPromise = service.setLocale('en');
-      const req = httpMock.expectOne('/assets/i18n/en.json');
+      // Switch to Hebrew first, then back to English with new translations
+      const hePromise = service.setLocale('he');
+      const heReq = httpMock.expectOne('./assets/i18n/he.json');
+      heReq.flush(mockHebrewTranslations);
+      await hePromise;
+
+      const enPromise = service.setLocale('en');
+      const req = httpMock.expectOne('./assets/i18n/en.json');
       req.flush(mockTranslations);
+      await enPromise;
 
       const signal = service.translate('greeting', { name: 'Alice', count: 5 });
 
@@ -151,7 +176,7 @@ describe('TranslationService', () => {
   describe('instant', () => {
     beforeEach(async () => {
       const initPromise = service.initialize();
-      const req = httpMock.expectOne(`/assets/i18n/${DEFAULT_LOCALE}.json`);
+      const req = httpMock.expectOne(`./assets/i18n/${DEFAULT_LOCALE}.json`);
       req.flush(mockEnglishTranslations);
       await initPromise;
     });
@@ -184,7 +209,7 @@ describe('TranslationService', () => {
   describe('setLocale', () => {
     beforeEach(async () => {
       const initPromise = service.initialize();
-      const req = httpMock.expectOne(`/assets/i18n/${DEFAULT_LOCALE}.json`);
+      const req = httpMock.expectOne(`./assets/i18n/${DEFAULT_LOCALE}.json`);
       req.flush(mockEnglishTranslations);
       await initPromise;
     });
@@ -192,7 +217,7 @@ describe('TranslationService', () => {
     it('should change locale and load translations', async () => {
       const setLocalePromise = service.setLocale('he');
 
-      const req = httpMock.expectOne('/assets/i18n/he.json');
+      const req = httpMock.expectOne('./assets/i18n/he.json');
       req.flush(mockHebrewTranslations);
 
       await setLocalePromise;
@@ -203,7 +228,7 @@ describe('TranslationService', () => {
     it('should save locale preference to storage', async () => {
       const setLocalePromise = service.setLocale('he');
 
-      const req = httpMock.expectOne('/assets/i18n/he.json');
+      const req = httpMock.expectOne('./assets/i18n/he.json');
       req.flush(mockHebrewTranslations);
 
       await setLocalePromise;
@@ -215,17 +240,21 @@ describe('TranslationService', () => {
       await service.setLocale('en');
 
       // No HTTP request should be made
-      httpMock.expectNone('/assets/i18n/en.json');
+      httpMock.expectNone('./assets/i18n/en.json');
     });
 
     it('should fallback to English on load error', async () => {
       const setLocalePromise = service.setLocale('he');
 
-      const req = httpMock.expectOne('/assets/i18n/he.json');
+      // Wait for the Hebrew request
+      const req = httpMock.expectOne('./assets/i18n/he.json');
       req.error(new ProgressEvent('error'));
 
+      // Wait a tick for the fallback to be triggered
+      await new Promise(resolve => setTimeout(resolve, 0));
+
       // Should fallback to English
-      const fallbackReq = httpMock.expectOne('/assets/i18n/en.json');
+      const fallbackReq = httpMock.expectOne('./assets/i18n/en.json');
       fallbackReq.flush(mockEnglishTranslations);
 
       await setLocalePromise;
@@ -245,7 +274,7 @@ describe('TranslationService', () => {
     it('should update when locale changes', async () => {
       const setLocalePromise = service.setLocale('he');
 
-      const req = httpMock.expectOne('/assets/i18n/he.json');
+      const req = httpMock.expectOne('./assets/i18n/he.json');
       req.flush(mockHebrewTranslations);
 
       await setLocalePromise;

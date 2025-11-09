@@ -134,9 +134,10 @@ export class TranslationService {
     this.loading.set(true);
 
     try {
-      // Use relative path to work with base-href in production
+      // Use relative path with ./ prefix to work with base-href in production
+      // Without ./, Angular treats this as absolute path which breaks with --base-href
       const translation = await firstValueFrom(
-        this.http.get<Translation>(`assets/i18n/${locale}.json`)
+        this.http.get<Translation>(`./assets/i18n/${locale}.json`)
       );
 
       this.translations.set(translation);
