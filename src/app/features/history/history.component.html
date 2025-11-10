@@ -1,10 +1,43 @@
 <div
   class="history-container"
+  [class.collapsed]="isCollapsed()"
   role="region"
   [attr.aria-label]="'history.aria.region' | translate">
-  <h2>{{ 'history.title' | translate }}</h2>
 
-  <div class="filter-section">
+  <!-- Mobile collapse/expand header -->
+  <button
+    type="button"
+    class="history-toggle"
+    (click)="toggleCollapsed()"
+    [attr.aria-expanded]="!isCollapsed()"
+    [attr.aria-controls]="panelId"
+    [attr.aria-label]="(isCollapsed() ? 'history.toggle.aria.expand' : 'history.toggle.aria.collapse') | translate">
+    <div class="history-toggle-content">
+      <div class="history-toggle-text">
+        <span class="history-toggle-eyebrow">{{ 'history.toggle.eyebrow' | translate }}</span>
+        <h2 class="history-toggle-title">
+          {{ 'history.title' | translate }}
+          @if (allBuilds().length > 0) {
+            <span class="build-count">({{ allBuilds().length }})</span>
+          }
+        </h2>
+      </div>
+      <span class="history-toggle-icon" [class.rotated]="!isCollapsed()" aria-hidden="true">▼</span>
+    </div>
+    <p class="history-toggle-meta">
+      @if (allBuilds().length > 0) {
+        {{ 'history.toggle.count' | translate:{ count: allBuilds().length } }}
+      } @else {
+        {{ 'history.toggle.empty' | translate }}
+      }
+    </p>
+  </button>
+
+  <div
+    class="history-content-area"
+    [id]="panelId"
+    [attr.aria-hidden]="isCollapsed()">
+    <div class="filter-section">
     <label for="history-filter" class="visually-hidden">{{ 'history.filter.label' | translate }}</label>
     <input
       id="history-filter"
@@ -74,4 +107,5 @@
       </p>
     </div>
   }
+  </div>
 </div>

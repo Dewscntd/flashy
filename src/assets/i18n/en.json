@@ -144,6 +144,15 @@
       "loadBuild": "Load build: {{url}}",
       "deleteBuild": "Delete build from {{date}}"
     },
+    "toggle": {
+      "eyebrow": "History",
+      "count": "{{count}} saved builds",
+      "empty": "No saved builds yet",
+      "aria": {
+        "expand": "Expand history panel to review saved builds",
+        "collapse": "Collapse history panel to hide saved builds"
+      }
+    },
     "filter": {
       "placeholder": "Filter by URL, parameters...",
       "label": "Filter builds"

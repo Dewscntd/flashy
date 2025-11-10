@@ -270,6 +270,18 @@ describe('HistoryComponent', () => {
     });
   });
 
+  describe('collapse behavior', () => {
+    it('should toggle collapsed state when requested', () => {
+      expect(component.isCollapsed()).toBeFalse();
+
+      component.toggleCollapsed();
+      expect(component.isCollapsed()).toBeTrue();
+
+      component.toggleCollapsed();
+      expect(component.isCollapsed()).toBeFalse();
+    });
+  });
+
   describe('onFilterChange', () => {
     it('should update filterTerm signal', () => {
       const event = {

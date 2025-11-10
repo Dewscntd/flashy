@@ -169,3 +169,38 @@ $brand: var(--color-brand-primary);
     }
   }
 }
+
+@media (max-width: 360px) {
+  .preview-container {
+    padding: 1rem 0.875rem;
+
+    .preview-box {
+      padding: 0.875rem 0.75rem;
+
+      .url-display {
+        font-size: 0.875rem;
+      }
+
+      .metadata {
+        gap: 1rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    .actions {
+      gap: 0.875rem;
+
+      button[tuiButton] {
+        min-height: 44px;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.875rem;
+      }
+    }
+
+    .shortened-url-section {
+      .shortened-url-display {
+        font-size: 0.875rem;
+      }
+    }
+  }
+}
